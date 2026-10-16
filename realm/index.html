@@ -106,10 +106,9 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
 .world{position:relative}
 .world svg{position:absolute;inset:0;width:100%;height:100%;display:block}
 .spot{cursor:pointer;outline:none}
-.spot .lit{opacity:0;filter:brightness(1.22) saturate(1.15);transition:opacity .18s cubic-bezier(.2,0,0,1);pointer-events:none}
+.spot .lit{opacity:0;filter:brightness(1.2) saturate(1.12);transition:opacity .2s cubic-bezier(.2,0,0,1);pointer-events:none}
 .spot .hit{fill:transparent;stroke:none}
 .spot:hover .lit,.spot.on .lit,.spot:focus-visible .lit{opacity:1}
-.spot:focus-visible .hit{stroke:#fff6c8;stroke-width:5;stroke-dasharray:14 10}
 .tag{position:absolute;z-index:2;transform:translate(-50%,-100%);display:inline-grid;place-items:center;height:36px;min-width:120px;padding:0 24px 2px;border:0;background:url(/realm/assets/placa.webp) center/100% 100% no-repeat;font-family:var(--gothic);font-weight:700;font-size:20px;line-height:1;color:#fff3d6;text-shadow:0 2px 0 #3a1d08,1px 0 0 #3a1d08,-1px 0 0 #3a1d08;white-space:nowrap;cursor:pointer;filter:drop-shadow(0 3px 2px rgba(0,0,0,.45));transition:transform .2s cubic-bezier(.3,1.5,.5,1)}
 .tag:hover,.tag.on{transform:translate(-50%,calc(-100% - 5px))}
 .tag:focus-visible{outline:3px solid #fff;outline-offset:3px}
@@ -302,9 +301,9 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   var ALERTS={stable:'Your horse is waiting for its kiss.',tavern:'A GAMBA is open.'};
   // each drawing: the outline of every place (in the image's pixels) and where its plaque hangs
   var MAPS={
-    land:{src:'/realm/assets/vila-deitada.webp',w:1536,h:1024,min:.55,focus:[768,500],spots:{
+    land:{src:'/realm/assets/vila-deitada.webp',w:1536,h:1024,min:.55,focus:[768,470],spots:{
       lists:{p:'120,250 165,205 255,160 350,130 440,85 500,100 625,150 630,280 600,330 470,420 310,480 260,470 125,390',t:[380,92]},
-      castle:{p:'975,90 1000,50 1110,20 1240,60 1285,110 1275,250 1180,290 1060,320 1000,300 985,250 970,170',t:[900,190]},
+      castle:{p:'975,90 1000,50 1110,20 1240,60 1285,110 1275,250 1180,290 1060,320 1000,300 985,250 970,170',t:[1130,72]},
       tavern:{p:'565,440 640,380 690,300 820,295 880,350 925,410 925,520 840,540 700,540 610,500',t:[760,292]},
       smith:{p:'1075,450 1130,420 1200,375 1250,340 1290,350 1385,450 1490,480 1490,560 1400,605 1250,590 1100,580 1060,560',t:[1255,338]},
       stable:{p:'60,700 120,650 180,590 330,530 380,580 470,620 520,640 520,700 480,760 420,800 330,820 220,860 80,800',t:[250,528]},
@@ -324,11 +323,14 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   function build(){
     var M=innerHeight>innerWidth?MAPS.port:MAPS.land,mw=map.clientWidth,mh=map.clientHeight;
     var k=Math.max(mw/M.w,mh/M.h,M.min),W=Math.round(M.w*k),H=Math.round(M.h*k);
-    var svg='<svg viewBox="0 0 '+M.w+' '+M.h+'"><defs>',spots='',tags='';
+    // the light on a place is a soft oval that fades out over the grass, so no outline shows
+    var svg='<svg viewBox="0 0 '+M.w+' '+M.h+'"><defs><radialGradient id="soft"><stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>',spots='',tags='';
     for(var id in M.spots){
-      var S=M.spots[id],P=PLACES[id];
-      svg+='<clipPath id="c-'+id+'"><polygon points="'+S.p+'"/></clipPath>';
-      spots+='<g class="spot" data-id="'+id+'" tabindex="0" role="button" aria-label="'+P.name+'"><image class="lit" href="'+M.src+'" width="'+M.w+'" height="'+M.h+'" clip-path="url(#c-'+id+')"/><polygon class="hit" points="'+S.p+'"/></g>';
+      var S=M.spots[id],P=PLACES[id],xs=[],ys=[];
+      S.p.split(' ').forEach(function(q){var c=q.split(',');xs.push(+c[0]);ys.push(+c[1])});
+      var x0=Math.min.apply(0,xs),x1=Math.max.apply(0,xs),y0=Math.min.apply(0,ys),y1=Math.max.apply(0,ys);
+      svg+='<mask id="m-'+id+'" maskUnits="userSpaceOnUse" x="0" y="0" width="'+M.w+'" height="'+M.h+'"><ellipse cx="'+(x0+x1)/2+'" cy="'+(y0+y1)/2+'" rx="'+((x1-x0)*.6).toFixed(0)+'" ry="'+((y1-y0)*.62).toFixed(0)+'" fill="url(#soft)"/></mask>';
+      spots+='<g class="spot" data-id="'+id+'" tabindex="0" role="button" aria-label="'+P.name+'"><image class="lit" href="'+M.src+'" width="'+M.w+'" height="'+M.h+'" mask="url(#m-'+id+')"/><polygon class="hit" points="'+S.p+'"/></g>';
       tags+='<button class="tag" type="button" data-id="'+id+'" tabindex="-1" style="left:'+(S.t[0]/M.w*100).toFixed(2)+'%;top:'+(S.t[1]/M.h*100).toFixed(2)+'%">'+P.tag+(ALERTS[id]?'<img class="alert" src="/realm/assets/alerta.webp" alt="">':'')+'</button>';
     }
     svg+='</defs><image href="'+M.src+'" width="'+M.w+'" height="'+M.h+'"/>'+spots+'</svg>';
