@@ -51,20 +51,42 @@ a{color:inherit}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
 /* ---------- header ---------- */
-.top{position:sticky;top:0;z-index:20;background:var(--royal);border-bottom:var(--line);box-shadow:0 4px 0 var(--gold),0 7px 0 var(--ink)}
+.top{--hb:64px;--bh:calc(var(--hb)*124/112);--cap:calc(var(--bh)*100/124);--fade:calc(var(--bh)*40/124);position:sticky;top:0;z-index:20;height:var(--hb);background:#3b200f}
+.bars{position:absolute;inset:0 0 auto;height:var(--bh);pointer-events:none;filter:drop-shadow(0 4px 4px rgba(0,0,0,.45))}
+.bar{position:absolute;top:0;height:100%;background:0 0/auto 100% no-repeat}
+.bar.m{left:calc(var(--cap) - var(--fade));right:calc(var(--cap) - var(--fade));background-image:url(assets/bar-mid.webp);background-repeat:repeat-x}
+.bar.l{left:0;width:var(--cap);background-image:url(assets/bar-l.webp)}
+.bar.r{right:0;width:var(--cap);background-image:url(assets/bar-r.webp);background-position:100% 0}
+.top .wrap{position:relative;z-index:2}
 .top .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;gap:12px}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none}
 .brand img{width:44px;height:44px;border-radius:50%;border:var(--line)}
 .brand b{font-family:var(--gothic);font-weight:900;font-size:30px;color:var(--gold);letter-spacing:.5px;-webkit-text-stroke:1.5px var(--ink);paint-order:stroke fill;text-shadow:0 3px 0 var(--ink)}
 .pennants{display:flex;gap:8px;align-self:flex-start}
 .pennant{position:relative;display:flex;flex-direction:column;align-items:center;width:104px;padding:10px 6px 22px;text-decoration:none;font-family:var(--gothic);font-weight:700;font-size:19px;line-height:1;color:#fff;background:var(--ink);clip-path:polygon(0 0,100% 0,100% 74%,50% 100%,0 74%);transition:transform .2s}
-.pennant::before{content:"";position:absolute;inset:0 3px 3px;background:var(--c,var(--red));clip-path:polygon(0 0,100% 0,100% 74%,50% 100%,0 74%);z-index:-1}
+.pennant::before{content:"";position:absolute;inset:0 3px 3px;background:linear-gradient(#fff0b8,#ecc25e 30%,#c08a2c 65%,#7a4d0e);clip-path:polygon(0 0,100% 0,100% 74%,50% 100%,0 74%);z-index:-3}
+.pennant::after{content:"";position:absolute;inset:0 8px 8px;background:var(--ink);clip-path:polygon(0 0,100% 0,100% 74%,50% 100%,0 74%);z-index:-2}
+.pennant .pf{position:absolute;inset:0 9.5px 10px;background:var(--c,var(--red));clip-path:polygon(0 0,100% 0,100% 74%,50% 100%,0 74%);z-index:-1}
 .pennant{isolation:isolate}
 .pennant small{font-family:var(--fellsc);font-size:12px;letter-spacing:1px;margin-top:4px;opacity:.9}
 a.pennant:hover{transform:translateY(4px)}
 span.pennant{cursor:default}
 .pennant.blue{--c:var(--royal-2)}
 .pennant.gold{--c:var(--gold);color:var(--ink)}
+/* pennants pinned to the right edge; on the left, the signed-in wallet: short address and a log out button */
+.top .wrap{width:auto;margin:0;padding-inline:calc(var(--cap)*.42)}
+.who{display:flex;align-items:center;gap:14px;min-width:0}
+.acct{display:flex;align-items:center;gap:10px}
+.acct[hidden]{display:none}
+.addr{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 12px 0 4px;border-radius:999px;background:#1a0e05;box-shadow:0 0 0 2px #d9a947,0 0 0 3.5px var(--ink);font-family:ui-monospace,Consolas,monospace;font-weight:700;font-size:15px;color:#f6e3b0;white-space:nowrap}
+.addr img{width:26px;height:26px;border-radius:50%}
+.addr::after{content:"";width:8px;height:8px;border-radius:50%;background:#2fb457;box-shadow:0 0 0 2px var(--ink)}
+.addr .s{display:none}
+.logout{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px;border:0;border-radius:8px;cursor:pointer;font-family:var(--gothic);font-weight:700;font-size:17px;line-height:1;color:#fff;white-space:nowrap;background:linear-gradient(#c8363c,#8e1a1f);box-shadow:0 0 0 2px #d9a947,0 0 0 3.5px var(--ink),inset 0 2px 0 rgba(255,255,255,.3);transition:transform .12s}
+.logout svg{width:16px;height:16px;flex:none}
+.logout:hover{transform:translateY(-1px)}
+.logout:active{transform:translateY(2px)}
+.logout:focus-visible{outline:3px solid #fff;outline-offset:4px}
 
 /* ---------- hero ---------- */
 .hero{--k:75px;--g:44px;--bw:100vw;--cut:0px;--w:calc(5.6*var(--k));--pw:calc(var(--w)*.46);--edge:max(16px,calc((100vw - 1180px)/2));
@@ -90,8 +112,8 @@ span.pennant{cursor:default}
 @keyframes pow{0%,41%{opacity:0;transform:scale(.3) rotate(-12deg)}45%{opacity:1;transform:scale(1.12) rotate(-6deg)}52%{opacity:1;transform:scale(1) rotate(-6deg)}57%,100%{opacity:0;transform:scale(1) rotate(-6deg)}}
 /* the game's HUD: panels from its ui.js (.pan), the player plate top left, the game picker on the right */
 .crier{position:absolute;z-index:9;top:26px;left:50%;transform:translateX(-50%);width:min(560px,86vw);display:flex;flex-direction:column;align-items:center;pointer-events:none}
-.rod{position:relative;z-index:2;width:100%;height:16px;background:var(--wood);border:var(--line);border-radius:8px}
-.rod::before,.rod::after{content:"";position:absolute;top:50%;width:26px;height:26px;margin-top:-13px;border-radius:50%;background:var(--gold);border:var(--line)}
+.rod{position:relative;z-index:2;width:100%;height:16px;border:var(--line);border-radius:8px;background:linear-gradient(rgba(255,232,190,.45),rgba(255,232,190,0) 34%,rgba(0,0,0,0) 58%,rgba(0,0,0,.38)),#6b3f1e url(assets/rod-wood.webp) 0 50%/auto 100% repeat-x}
+.rod::before,.rod::after{content:"";position:absolute;top:50%;width:26px;height:26px;margin-top:-13px;border-radius:50%;border:var(--line);background:radial-gradient(circle at 34% 30%,#fffbe6 0 9%,#ffe7a0 16%,#f0c552 34%,#c58d22 62%,#7a4a0b 92%);box-shadow:inset -2px -3px 3px rgba(60,30,0,.35)}
 .rod::before{left:-14px}.rod::after{right:-14px}
 .wallet{pointer-events:auto;margin:12px 0 0;display:inline-flex;align-items:center;gap:10px;padding:6px 18px 6px 6px;border:0;border-radius:10px;cursor:pointer;font-family:var(--geo);font-weight:700;font-size:18px;line-height:1;letter-spacing:.03em;color:#2b1a0d;white-space:nowrap;background:linear-gradient(#ffd85a,#e0a91f);box-shadow:0 0 0 2px #0a1636,0 5px 0 2px #0a1636,inset 0 3px 0 rgba(255,255,255,.5);transition:transform .12s}
 .wallet img{width:32px;height:32px;border-radius:8px;flex:none}
@@ -101,8 +123,9 @@ span.pennant{cursor:default}
 .wallet.on::after{content:"";width:10px;height:10px;border-radius:50%;background:#2fb457;box-shadow:0 0 0 2px #2b1a0d}
 .wallet[aria-busy="true"]{cursor:progress;opacity:.85}
 .banner{position:relative;width:88%;margin-top:-6px;padding:4px;background:var(--ink);clip-path:polygon(0 0,100% 0,100% 84%,50% 100%,0 84%);pointer-events:auto}
-.banner>div{padding:6px;background:#d9a21f;clip-path:polygon(0 0,100% 0,100% 84%,50% 100%,0 84%)}
-.banner>div>div{background:linear-gradient(#1d3778,#132a62);clip-path:polygon(0 0,100% 0,100% 84%,50% 100%,0 84%);padding:6px 16px 46px;text-align:center;color:#fff}
+.banner>div{position:relative;isolation:isolate;padding:7.5px;background:linear-gradient(160deg,#fff0b8 0%,#ecc25e 16%,#c08a2c 38%,#f2d27e 56%,#c08a2c 76%,#7a4d0e 100%);clip-path:polygon(0 0,100% 0,100% 84%,50% 100%,0 84%)}
+.banner>div::before{content:"";position:absolute;inset:6px;background:var(--ink);clip-path:polygon(0 0,100% 0,100% 84%,50% 100%,0 84%);z-index:0}
+.banner>div>div{position:relative;z-index:1;background:linear-gradient(#1d3778,#132a62);clip-path:polygon(0 0,100% 0,100% 84%,50% 100%,0 84%);padding:6px 16px 46px;text-align:center;color:#fff}
 .title{margin:0;font-family:var(--gothic);font-weight:900;font-size:clamp(58px,7.2vw,112px);line-height:.86;color:var(--gold);-webkit-text-stroke:3px var(--ink);paint-order:stroke fill;text-shadow:0 4px 0 var(--gold-3),0 8px 0 var(--ink)}
 .subtitle{margin:10px 0 0;font-family:var(--gothic);font-weight:700;font-size:clamp(19px,2vw,25px);line-height:1.1}
 .tagline{margin:6px auto 0;max-width:30ch;font-style:italic;font-size:16px;color:#d9e1ff}
@@ -154,11 +177,24 @@ footer p{margin:6px 0 0;font-style:italic}
   .subtitle{font-size:19px;margin-top:8px}
   .tagline{font-size:15px;margin-top:4px}
   body{font-size:18px}
+  section{padding:64px 0}
+  .top{--hb:58px}
   .top .wrap{height:58px}
   .brand b{display:none}
-  .pennant{width:84px;font-size:16px;padding:8px 4px 18px}
+  .top .wrap{padding-inline:16px}
+  .top.signed .brand{display:none}
+  .addr{height:30px;padding:0 7px;font-size:12px}
+  .addr img,.addr::after,.addr .l{display:none}
+  .addr .s{display:inline}
+  .logout{height:30px;padding:0 7px}
+  .logout span{display:none}
+  .acct{gap:7px}
+  .pennants{gap:6px}
+  .pennant{width:80px;font-size:16px;padding:8px 4px 18px}
+  .pennant::before{inset:0 2px 2px}
+  .pennant::after{inset:0 6px 6px}
+  .pennant .pf{inset:0 7px 7.5px}
   .pennant small{font-size:11px}
-  section{padding:64px 0}
   .btn{font-size:21px;padding:12px 20px}
   .fact{grid-template-columns:1fr;gap:2px}
   .parch{padding:40px 20px 30px}
@@ -183,7 +219,6 @@ footer p{margin:6px 0 0;font-style:italic}
   .rider.r{left:auto;right:6vw}
   .pow{display:none}
 }
-
 /* ---------- rotating hero ---------- */
 .slide{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .7s ease,visibility 0s .7s}
 .slide.is-on{opacity:1;visibility:visible;transition:opacity .7s ease}
@@ -219,24 +254,43 @@ footer p{margin:6px 0 0;font-style:italic}
 .dots button:focus-visible{outline:3px solid var(--gold);outline-offset:4px}
 @media (max-width:620px){.runner{left:var(--xp);--da:6vw}.runner:nth-of-type(n){--da:6vw}.ltag{display:none}.dots{bottom:12px}}
 @media (max-height:520px) and (orientation:landscape){.runner{left:var(--xl)}.ltag{display:none}.dots{bottom:8px;padding:5px 10px}}
-@media (prefers-reduced-motion:reduce){.track,.runner,.runner i,.dust,.slide{animation:none!important;transition:none!important}.dust{display:none}}
+/* the race scene's sign: the race game's ad board (feet cut off) takes the pennant's place; the pennant rolls up */
+.crier{transition:translate .6s cubic-bezier(.3,1.35,.5,1) .3s,opacity .2s .3s,visibility 0s .3s}
+.hero[data-scene="race"] .crier{translate:0 -160%;opacity:0;visibility:hidden;transition:translate .45s cubic-bezier(.6,0,.9,.4),opacity .2s .25s,visibility 0s .45s}
+.board{--bb:30px;position:absolute;z-index:9;top:28px;left:50%;width:min(500px,80vw);transform:translateX(-50%);padding:6px 16px 16px;text-align:center;color:#fff;border:solid transparent;border-width:calc(var(--bb)*.933) var(--bb) calc(var(--bb)*.911);border-image:url(assets/board.webp) 42 45 41 stretch;background:linear-gradient(115deg,rgba(255,255,255,.10) 0 34%,rgba(255,255,255,0) 34.5%) padding-box,radial-gradient(circle,rgba(110,160,255,.30) 0 1px,transparent 1.6px) 0 0/4px 4px padding-box,radial-gradient(ellipse at 50% 40%,#17326f,#060e27 78%) padding-box;pointer-events:none;
+  opacity:0;visibility:hidden;scale:.8;translate:0 -24px;transition:opacity .2s,scale .3s,translate .3s,visibility 0s .3s}
+.hero[data-scene="race"] .board{opacity:1;visibility:visible;scale:1;translate:0 0;transition:opacity .2s .35s,scale .55s cubic-bezier(.3,1.5,.5,1) .35s,translate .55s cubic-bezier(.3,1.5,.5,1) .35s,visibility 0s .35s}
+.board .title{font-size:clamp(52px,6.4vw,96px);text-shadow:0 0 18px rgba(240,189,69,.6),0 4px 0 var(--gold-3),0 8px 0 var(--ink)}
+/* the LED screen: lit dots, a glare across the glass, glowing letters */
+.board .subtitle{text-shadow:0 0 10px rgba(150,190,255,.9)}
+a.wallet{text-decoration:none}
+@media (max-width:620px){.board{--bb:22px;top:20px;width:calc((100vw - 24px)*.92);padding:4px 10px 12px}.board .title{font-size:54px}}
+@media (max-height:520px) and (orientation:landscape){.board{--bb:18px;top:14px;width:min(340px,44vw);padding:2px 10px 8px}.board .title{font-size:44px}}
+@media (prefers-reduced-motion:reduce){.track,.runner,.runner i,.dust,.slide,.crier,.board{animation:none!important;transition:none!important}.dust{display:none}}
 </style>
 </head>
 <body>
 
 <header class="top">
+  <span class="bars" aria-hidden="true"><i class="bar m"></i><i class="bar l"></i><i class="bar r"></i></span>
   <div class="wrap">
-    <a class="brand" href="#top" aria-label="Horske, back to top"><img src="assets/logo.webp" alt=""><b>Horske</b></a>
+    <div class="who">
+      <a class="brand" href="#top" aria-label="Horske, back to top"><img src="assets/logo.webp" alt=""><b>Horske</b></a>
+      <div class="acct" hidden>
+        <span class="addr" id="addr"><img src="assets/ronin.png" alt="" width="26" height="26"><span class="l"></span><span class="s"></span></span>
+        <button class="logout" id="logout" type="button" aria-label="Log out"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.5 2.5h-4v11h4M10 4.5 13.5 8 10 11.5M13.5 8H6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Log out</span></button>
+      </div>
+    </div>
     <nav class="pennants" aria-label="Main">
-      <span class="pennant blue" aria-disabled="true">Joust<small>soon</small></span>
-      <span class="pennant" aria-disabled="true">Races<small>soon</small></span>
-      <a class="pennant gold" href="#token">$HORSKE<small>buy</small></a>
+      <span class="pennant blue" aria-disabled="true"><i class="pf"></i>Joust<small>soon</small></span>
+      <span class="pennant" aria-disabled="true"><i class="pf"></i>Races<small>soon</small></span>
+      <a class="pennant gold" href="#token"><i class="pf"></i>$HORSKE<small>buy</small></a>
     </nav>
   </div>
 </header>
 
 <main id="top">
-  <section class="hero" style="padding:0" aria-labelledby="t">
+  <section class="hero" style="padding:0" aria-labelledby="t" data-scene="joust">
     <div class="slide s-joust is-on" id="slide-joust">
     <div class="lay stage" role="img" aria-label="The joust lists: castle on the hill, striped tents and a crowd of cheering Ronkes"></div>
     <div class="rider r" aria-hidden="true"><i></i></div>
@@ -263,6 +317,13 @@ footer p{margin:6px 0 0;font-style:italic}
         <button class="wallet" id="wallet" type="button"><img src="assets/ronin.png" alt="" width="34" height="34"><span>Connect Wallet</span></button>
       </div></div></div>
     </header>
+
+    <div class="board">
+      <p class="title" aria-hidden="true">Horske</p>
+      <p class="subtitle">Racing</p>
+      <p class="tagline">6 Ronkes. 1 winner.</p>
+      <a class="wallet" href="https://games.ronkeverse.com/horske" target="_blank" rel="noopener"><img src="assets/logo.webp" alt="" width="34" height="34"><span>Play at Ronke Casino</span></a>
+    </div>
 
     <nav class="dots" aria-label="Hero scenes">
       <button type="button" aria-label="The joust" aria-current="true"></button>
@@ -320,7 +381,7 @@ footer p{margin:6px 0 0;font-style:italic}
     var I=port.matches?P:D,W=h.clientWidth,Hh=h.clientHeight,s=Math.max(W/I.iw,Hh/I.cut);
     h.style.setProperty('--bx',(I.bx*100)+'%');
     h.style.setProperty('--bw',(I.iw*s).toFixed(1)+'px');
-    h.style.setProperty('--k',(I.kimg*s).toFixed(2)+'px');var u=Hh/1086,oy=0,cr=h.querySelector('.crier');if(cr&&matchMedia('(max-width:620px)').matches){var cb=cr.getBoundingClientRect().bottom-h.getBoundingClientRect().top,u2=(Hh-cb-4)/836;if(u2>0&&u2<u){u=u2;oy=Hh-1086*u2}}h.style.setProperty('--u',u.toFixed(4)+'px');h.style.setProperty('--oy',oy.toFixed(1)+'px');
+    h.style.setProperty('--k',(I.kimg*s).toFixed(2)+'px');var u=Hh/1086,oy=0,cr=h.querySelector('.board');if(cr&&matchMedia('(max-width:620px)').matches){var cb=cr.offsetTop+cr.offsetHeight,u2=(Hh-cb-4)/836;if(u2>0&&u2<u){u=u2;oy=Hh-1086*u2}}h.style.setProperty('--u',u.toFixed(4)+'px');h.style.setProperty('--oy',oy.toFixed(1)+'px');
     h.style.setProperty('--g',((I.cut-I.feet)*s).toFixed(1)+'px');h.style.setProperty('--cut',((I.ih-I.cut)*s).toFixed(1)+'px');
   }
   frame();addEventListener('resize',frame);if(port.addEventListener)port.addEventListener('change',frame);
@@ -328,13 +389,18 @@ footer p{margin:6px 0 0;font-style:italic}
 (function(){
   var btn=document.getElementById('wallet');if(!btn)return;
   var label=btn.querySelector('span'),KEY='horske-wallet',acct=null;
+  var top=document.querySelector('.top'),box=document.querySelector('.acct'),addr=document.getElementById('addr'),out=document.getElementById('logout');
   var phone=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.maxTouchPoints>1&&/Mac/.test(navigator.platform));
   function prov(){return window.ronin&&window.ronin.provider}
   function show(){
     btn.classList.toggle('on',!!acct);
     label.textContent=acct?acct.slice(0,6)+'\u2026'+acct.slice(-4):'Connect Wallet';
     btn.title=acct?'Connected: '+acct+' \u2014 tap to disconnect':'Connect your Ronin Wallet';
+    if(!box)return;
+    box.hidden=!acct;top.classList.toggle('signed',!!acct);
+    if(acct){addr.querySelector('.l').textContent=acct.slice(0,6)+'\u2026'+acct.slice(-4);addr.querySelector('.s').textContent=acct.slice(0,4)+'\u2026'+acct.slice(-2);addr.title=acct}
   }
+  if(out)out.addEventListener('click',function(){set(null)});
   function set(a){acct=a||null;show();try{acct?localStorage.setItem(KEY,'1'):localStorage.removeItem(KEY)}catch(e){}}
   btn.addEventListener('click',function(){
     if(btn.getAttribute('aria-busy')==='true')return;
@@ -374,6 +440,7 @@ document.querySelectorAll('[data-copy]').forEach(function(b){
   function go(n){
     i=(n+slides.length)%slides.length;
     if(race)race.classList.add('ready');
+    hero.setAttribute('data-scene',slides[i]===race?'race':'joust');
     slides.forEach(function(s,k){var on=k===i;s.classList.toggle('is-on',on);s.setAttribute('aria-hidden',on?'false':'true')});
     dots.forEach(function(d,k){d.setAttribute('aria-current',k===i?'true':'false')});
   }
