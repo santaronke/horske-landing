@@ -8,13 +8,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@700;900&family=IM+Fell+English:ital@0;1&family=Gelasio:wght@700&display=swap" rel="stylesheet">
-<link rel="preload" as="image" href="/realm/assets/vila-deitada.webp" media="(orientation:landscape)">
+<link rel="preload" as="image" href="/realm/assets/vila-larga.webp" media="(orientation:landscape)">
 <link rel="preload" as="image" href="/realm/assets/vila-em-pe.webp" media="(orientation:portrait)">
 <style>
 :root{
   --ink:#1d130b;--night:#0b1038;--gold:#f0bd45;--gold-3:#8a5a0e;--ice:#7fdcff;--violet:#a98bff;
   --gothic:"Grenze Gotisch","Times New Roman",serif;--fell:"IM Fell English",Georgia,serif;--geo:"Gelasio",Georgia,serif;
-  --vila:url(/realm/assets/vila-deitada.webp);
+  --vila:url(/realm/assets/vila-larga.webp);
   --d:min(60vmin,440px);
 }
 @media (orientation:portrait){:root{--vila:url(/realm/assets/vila-em-pe.webp);--d:min(80vw,50vh,440px)}}
@@ -33,7 +33,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   radial-gradient(circle at 50% 50%,rgba(169,139,255,.28) 0,rgba(127,220,255,.10) 22%,transparent 42%),
   radial-gradient(ellipse at 50% 50%,#25307a 0,#151d58 45%,var(--night) 80%)}
 .win{position:fixed;inset:0;z-index:2;pointer-events:none}
-.vila{position:absolute;inset:0;background:var(--vila) center/cover no-repeat;will-change:transform}
+.vila{position:absolute;inset:0;background:var(--vila) center/cover no-repeat #2d5a1e;will-change:transform}
 .ui{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(10px,2.6vh,24px);padding:16px}
 .words{display:flex;flex-direction:column;align-items:center;gap:6px}
 .title{position:relative;z-index:5;margin:0;font-family:var(--gothic);font-weight:900;font-size:clamp(44px,7vw,92px);line-height:.9;color:var(--gold);-webkit-text-stroke:3px var(--ink);paint-order:stroke fill;text-shadow:0 4px 0 var(--gold-3),0 8px 0 var(--ink);text-align:center}
@@ -99,18 +99,20 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
 .logout:active{transform:translateY(2px)}
 .logout:focus-visible{outline:3px solid #fff;outline-offset:4px}
 
-/* the map scrolls (drag it) when the screen is narrower or shorter than the village */
-.map{position:absolute;left:0;right:0;bottom:0;top:var(--hb);overflow:auto;scrollbar-width:none;overscroll-behavior:contain;cursor:grab}
+/* phones: the map scrolls (drag it). PC and tablet (.fit): the whole realm shows, nothing scrolls */
+.map{position:absolute;left:0;right:0;bottom:0;top:var(--hb);overflow:auto;scrollbar-width:none;overscroll-behavior:contain;cursor:grab;background:#2d5a1e}
+.map.fit{overflow:hidden;overflow:clip;cursor:default}
 .map::-webkit-scrollbar{display:none}
 .map.drag{cursor:grabbing}
 .world{position:relative}
+.map.fit .world{position:absolute}
 .world svg{position:absolute;inset:0;width:100%;height:100%;display:block}
 .spot{cursor:pointer;outline:none}
 .spot .lit{opacity:0;filter:brightness(1.2) saturate(1.12);transition:opacity .2s cubic-bezier(.2,0,0,1);pointer-events:none}
 .spot .hit{fill:transparent;stroke:none}
 .spot:hover .lit,.spot.on .lit,.spot:focus-visible .lit{opacity:1}
-.tag{position:absolute;z-index:2;transform:translate(-50%,-100%);display:inline-grid;place-items:center;height:36px;min-width:120px;padding:0 24px 2px;border:0;background:url(/realm/assets/placa.webp) center/100% 100% no-repeat;font-family:var(--gothic);font-weight:700;font-size:20px;line-height:1;color:#fff3d6;text-shadow:0 2px 0 #3a1d08,1px 0 0 #3a1d08,-1px 0 0 #3a1d08;white-space:nowrap;cursor:pointer;filter:drop-shadow(0 3px 2px rgba(0,0,0,.45));transition:transform .2s cubic-bezier(.3,1.5,.5,1)}
-.tag:hover,.tag.on{transform:translate(-50%,calc(-100% - 5px))}
+.tag{position:absolute;z-index:2;transform-origin:50% 100%;transform:translate(-50%,-100%) scale(var(--ts,1));display:inline-grid;place-items:center;height:36px;min-width:120px;padding:0 24px 2px;border:0;background:url(/realm/assets/placa.webp) center/100% 100% no-repeat;font-family:var(--gothic);font-weight:700;font-size:20px;line-height:1;color:#fff3d6;text-shadow:0 2px 0 #3a1d08,1px 0 0 #3a1d08,-1px 0 0 #3a1d08;white-space:nowrap;cursor:pointer;filter:drop-shadow(0 3px 2px rgba(0,0,0,.45));transition:transform .2s cubic-bezier(.3,1.5,.5,1)}
+.tag:hover,.tag.on{transform:translate(-50%,calc(-100% - 5px)) scale(var(--ts,1))}
 .tag:focus-visible{outline:3px solid #fff;outline-offset:3px}
 .alert{position:absolute;right:-14px;top:-16px;width:30px;height:auto;animation:pop .5s cubic-bezier(.3,1.6,.5,1) .3s both;pointer-events:none}
 @keyframes pop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
@@ -233,6 +235,8 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   function place(){                 // the waiting portal: the village already shows inside it
     if(busy||scene.classList.contains('inside'))return;
     g=geom();win.style.clipPath=circ(g.R);
+    var f=window.realmFrame&&realmFrame();
+    if(f)vila.style.background='url('+f.src+') '+f.ox+'px '+(f.top+f.oy)+'px/'+f.W+'px '+f.H+'px no-repeat,linear-gradient(#3b200f,#3b200f) 0 0/100% '+f.top+'px no-repeat,#2d5a1e';
     vila.style.transformOrigin=g.cx+'px '+g.cy+'px';vila.style.transform='scale('+g.V0+')';
   }
   function inside(){scene.classList.add('inside');busy=false;btn.removeAttribute('aria-busy');if(window.enterRealm)enterRealm()}
@@ -277,7 +281,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
     scene.classList.remove('inside');busy=false;btn.removeAttribute('aria-busy');btn.querySelector('span').textContent='Connect Ronin Wallet';
     place();
   }
-  window.gateReset=reset;
+  window.gateReset=reset;window.gatePlace=place;
   addEventListener('resize',place);
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(place);
   place();
@@ -302,14 +306,14 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   var ALERTS={stable:'Your horse is waiting for its kiss.',tavern:'A GAMBA is open.'};
   // each drawing: the outline of every place (in the image's pixels) and where its plaque hangs
   var MAPS={
-    land:{src:'/realm/assets/vila-deitada.webp',w:1536,h:1024,min:.55,focus:[768,470],spots:{
-      lists:{p:'120,250 165,205 255,160 350,130 440,85 500,100 625,150 630,280 600,330 470,420 310,480 260,470 125,390',t:[380,92]},
-      castle:{p:'975,90 1000,50 1110,20 1240,60 1285,110 1275,250 1180,290 1060,320 1000,300 985,250 970,170',t:[1130,72]},
-      tavern:{p:'565,440 640,380 690,300 820,295 880,350 925,410 925,520 840,540 700,540 610,500',t:[760,292]},
-      smith:{p:'1075,450 1130,420 1200,375 1250,340 1290,350 1385,450 1490,480 1490,560 1400,605 1250,590 1100,580 1060,560',t:[1255,338]},
-      stable:{p:'60,700 120,650 180,590 330,530 380,580 470,620 520,640 520,700 480,760 420,800 330,820 220,860 80,800',t:[250,528]},
-      market:{p:'580,700 640,640 690,600 830,600 880,630 950,680 950,760 890,790 800,800 720,800 600,780',t:[765,594]},
-      track:{p:'1000,840 1040,760 1100,650 1270,610 1350,620 1430,640 1485,700 1485,840 1440,890 1300,930 1100,930 1020,900',t:[1245,805]}}},
+    land:{src:'/realm/assets/vila-larga.webp',w:1717,h:916,min:.5,focus:[895,416],box:[330,40,1460,792],spots:{
+      lists:{p:'370,240 420,195 470,172 520,172 575,205 578,255 520,290 445,318 395,300 372,270',t:[470,170]},
+      castle:{p:'1075,235 1100,200 1130,120 1175,80 1250,95 1265,150 1300,230 1290,285 1210,300 1130,295 1085,270',t:[1195,84]},
+      tavern:{p:'735,405 760,375 800,340 840,335 880,360 905,400 905,435 860,445 790,445 745,430',t:[820,332]},
+      smith:{p:'1230,440 1265,410 1300,385 1335,372 1385,420 1440,465 1445,490 1400,500 1300,505 1240,490',t:[1330,372]},
+      stable:{p:'345,595 380,560 420,525 470,515 500,540 580,570 580,600 540,625 480,650 400,655 350,620',t:[455,512]},
+      market:{p:'715,610 735,575 790,540 845,545 895,568 930,600 925,640 870,645 800,640 725,635',t:[820,545]},
+      track:{p:'1085,700 1120,650 1155,605 1250,595 1340,625 1365,670 1340,740 1230,775 1130,775 1090,740',t:[1235,592]}}},
     port:{src:'/realm/assets/vila-em-pe.webp',w:1024,h:1536,min:.5,focus:[520,690],spots:{
       lists:{p:'70,520 120,470 230,410 290,385 330,400 420,440 430,520 400,560 300,610 200,660 140,630 75,600',t:[250,388]},
       castle:{p:'655,420 680,370 760,330 850,385 865,420 860,500 800,540 700,580 665,540 655,480',t:[760,336]},
@@ -321,9 +325,25 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   };
   var cur=null,last=null;
 
+  // the drawing's size and place on the map (the gate shows the same at the end of the entrance)
+  function frame(){
+    var M=innerHeight>innerWidth?MAPS.port:MAPS.land,mw=map.clientWidth,mh=map.clientHeight,fit=Math.min(innerWidth,innerHeight)>=600,k,W,H,ox,oy;
+    if(fit){      // PC and tablet: the whole realm in view. The drawing fills the screen and is cut only where nothing is
+                  // (M.box holds the buildings); a screen it cannot fill shows plain grass, no blurred bands
+      var B=M.box||[0,0,M.w,M.h],kc=Math.max(mw/M.w,mh/M.h),kf=Math.min(mw/(B[2]-B[0]),mh/(B[3]-B[1]));
+      k=Math.min(kc,kf);W=Math.round(M.w*k);H=Math.round(M.h*k);
+      ox=W<=mw?(mw-W)/2:Math.min(0,Math.max(mw-W,mw/2-(B[0]+B[2])/2*k));
+      oy=H<=mh?(mh-H)/2:-Math.min(H-mh,Math.max(0,B[3]*k-mh));
+    }else{        // phone: the map scrolls (drag it), as it always did
+      k=Math.max(mw/M.w,mh/M.h,M.min);W=Math.round(M.w*k);H=Math.round(M.h*k);
+      var sl=M===cur?map.scrollLeft:M.focus[0]*k-mw/2,st=M===cur?map.scrollTop:M.focus[1]*k-mh/2;
+      ox=-Math.max(0,Math.min(W-mw,sl));oy=-Math.max(0,Math.min(H-mh,st));
+    }
+    return {M:M,fit:fit,k:k,W:W,H:H,ox:Math.round(ox),oy:Math.round(oy),top:map.offsetTop,src:M.src};
+  }
+  window.realmFrame=frame;
   function build(){
-    var M=innerHeight>innerWidth?MAPS.port:MAPS.land,mw=map.clientWidth,mh=map.clientHeight;
-    var k=Math.max(mw/M.w,mh/M.h,M.min),W=Math.round(M.w*k),H=Math.round(M.h*k);
+    var f=frame(),M=f.M,k=f.k,W=f.W,H=f.H;
     // the light on a place is a soft oval that fades out over the grass, so no outline shows
     var svg='<svg viewBox="0 0 '+M.w+' '+M.h+'"><defs><radialGradient id="soft"><stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>',spots='',tags='';
     for(var id in M.spots){
@@ -335,9 +355,14 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
       tags+='<button class="tag" type="button" data-id="'+id+'" tabindex="-1" style="left:'+(S.t[0]/M.w*100).toFixed(2)+'%;top:'+(S.t[1]/M.h*100).toFixed(2)+'%">'+P.tag+(ALERTS[id]?'<img class="alert" src="/realm/assets/alerta.webp" alt="">':'')+'</button>';
     }
     svg+='</defs><image href="'+M.src+'" width="'+M.w+'" height="'+M.h+'"/>'+spots+'</svg>';
-    world.style.width=W+'px';world.style.height=H+'px';world.innerHTML=svg+tags;
-    if(M!==cur){map.scrollLeft=M.focus[0]*k-mw/2;map.scrollTop=M.focus[1]*k-mh/2}
+    map.classList.toggle('fit',f.fit);
+    world.style.width=W+'px';world.style.height=H+'px';
+    if(f.fit){world.style.left=f.ox+'px';world.style.top=f.oy+'px';world.style.setProperty('--ts',Math.max(.62,Math.min(1,k/.8)).toFixed(3))}
+    else{world.style.left=world.style.top='';world.style.removeProperty('--ts')}
+    world.innerHTML=svg+tags;
+    if(!f.fit&&M!==cur){map.scrollLeft=M.focus[0]*k-map.clientWidth/2;map.scrollTop=M.focus[1]*k-map.clientHeight/2}
     cur=M;
+    if(window.gatePlace)gatePlace();
   }
   function light(id,on){world.querySelectorAll('[data-id="'+id+'"]').forEach(function(e){e.classList.toggle('on',on)})}
   function open(id){
@@ -357,9 +382,9 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
     a.finished.then(function(){panel.hidden=true;if(last&&last.focus)last.focus()});
   }
 
-  // drag the map with the mouse (touch scrolls natively); a drag is not a click
+  // phones: drag the map with the mouse (touch scrolls natively); a drag is not a click
   var drag=null,moved=false;
-  map.addEventListener('pointerdown',function(e){if(e.pointerType!=='mouse'||e.button!==0)return;drag={x:e.clientX,y:e.clientY,l:map.scrollLeft,t:map.scrollTop};moved=false});
+  map.addEventListener('pointerdown',function(e){if(map.classList.contains('fit')||e.pointerType!=='mouse'||e.button!==0)return;drag={x:e.clientX,y:e.clientY,l:map.scrollLeft,t:map.scrollTop};moved=false});
   addEventListener('pointermove',function(e){
     if(!drag)return;var dx=e.clientX-drag.x,dy=e.clientY-drag.y;
     if(!moved&&Math.abs(dx)+Math.abs(dy)>6){moved=true;map.classList.add('drag')}
