@@ -76,7 +76,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
 
 /* ---------- the realm: wood header, the village map, the parchment ---------- */
 :root{--hb:64px}
-.realm{position:fixed;inset:0;z-index:1;background:#2d5a1e}
+.realm{position:fixed;inset:0;z-index:1;background:#2d5a1e;visibility:hidden}
 .top{--bh:calc(var(--hb)*124/112);--cap:calc(var(--bh)*100/124);--fade:calc(var(--bh)*40/124);position:absolute;top:0;left:0;right:0;z-index:3;height:var(--hb);background:#3b200f}
 .bars{position:absolute;inset:0 0 auto;height:var(--bh);pointer-events:none;filter:drop-shadow(0 4px 4px rgba(0,0,0,.45))}
 .bar{position:absolute;top:0;height:100%;background:0 0/auto 100% no-repeat}
@@ -255,7 +255,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
     }
     var T={delay:GO,duration:GO_D,easing:'linear',fill:F};
     rim.animate(kr,T);win.animate(kc,T);
-    sky.animate([{opacity:1,transform:'scale(1)'},{opacity:0,transform:'scale(1.4)'}],{delay:GO,duration:GO_D,easing:'cubic-bezier(.62,0,.9,.32)',fill:F});
+    sky.animate([{transform:'scale(1)'},{transform:'scale(1.4)'}],{delay:GO,duration:GO_D,easing:'cubic-bezier(.62,0,.9,.32)',fill:F});
     flash.animate([{opacity:0},{opacity:.4,offset:.3},{opacity:0}],{delay:GO+GO_D-260,duration:480,easing:'linear',fill:F});
     vila.animate(kv,T).finished.then(inside);
   }
@@ -381,11 +381,11 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   window.enterRealm=function(){
     var a=window.realmAcct;addr.hidden=!a;
     if(a){addr.querySelector('.l').textContent=a.slice(0,6)+'\u2026'+a.slice(-4);addr.querySelector('.s').textContent=a.slice(0,4)+'\u2026'+a.slice(-2);addr.title=a}
-    realm.removeAttribute('aria-hidden');
+    realm.removeAttribute('aria-hidden');realm.style.visibility='visible';
     scene.animate([{opacity:1},{opacity:0}],{duration:reduce.matches?1:260,easing:'cubic-bezier(.4,0,1,1)',fill:'forwards'}).finished.then(function(){scene.style.display='none'});
   };
   $('logout').addEventListener('click',function(){
-    window.realmAcct=null;close();realm.setAttribute('aria-hidden','true');
+    window.realmAcct=null;close();realm.setAttribute('aria-hidden','true');realm.style.visibility='';
     scene.getAnimations().forEach(function(a){a.cancel()});scene.style.display='';
     if(window.gateReset)gateReset();
   });
