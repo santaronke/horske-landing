@@ -132,6 +132,23 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
 .go:hover{transform:translateY(-2px)}
 .go:focus-visible{outline:3px solid #1d3778;outline-offset:4px}
 .go[hidden],.soon[hidden],.why[hidden]{display:none}
+/* the modal of a place whose panes live in the game (Blacksmith, Market, Castle): the pane in a frame, a tab per door */
+.box{position:absolute;inset:0;z-index:5;display:grid;place-items:center;padding:16px;background:rgba(8,10,30,.6)}
+.box[hidden]{display:none}
+.boxin{position:relative;display:flex;flex-direction:column;width:min(1040px,100%);height:min(780px,100%);padding:14px;box-sizing:border-box;background:#f6ead0;border:3px solid var(--ink);box-shadow:0 10px 0 var(--ink);color:var(--ink)}
+.boxin::before{content:"";position:absolute;inset:7px;border:2px solid #c98c1d;pointer-events:none}
+.bh{position:relative;display:flex;align-items:center;flex-wrap:wrap;gap:10px 16px;padding:2px 46px 12px 6px}
+.bh h2{margin:0;font-family:var(--gothic);font-weight:900;font-size:34px;line-height:1;color:#1d3778}
+.btabs{display:flex;flex-wrap:wrap;gap:8px 10px}
+.btabs .go{margin:0;padding:7px 14px;font-size:16px;border:0;cursor:pointer}
+.btabs .go.tab[aria-selected="true"]{color:#ffe08a;background:linear-gradient(#1d3778,#132a62);box-shadow:0 0 0 2px #0a1636,0 3px 0 2px #0a1636}
+.boxin .x{position:absolute;right:8px;top:6px;z-index:1;width:40px;height:40px;border:0;background:none;font-family:var(--geo);font-size:30px;line-height:1;color:var(--ink);cursor:pointer}
+.boxin .x:focus-visible{outline:3px solid #1d3778}
+.bbody{position:relative;flex:1;min-height:0;border:3px solid var(--ink);border-radius:6px;overflow:hidden;background:#132a62}
+.bbody iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.bload{position:absolute;inset:0;z-index:1;display:grid;place-items:center;margin:0;font-family:var(--gothic);font-weight:700;font-size:24px;color:#ffe08a;background:#132a62}
+.bload[hidden]{display:none}
+@media (max-width:600px){.box{padding:6px}.boxin{padding:10px}.bh{padding:0 44px 10px 4px}.bh h2{font-size:26px}.btabs .go{padding:6px 11px;font-size:14px}}
 .gos{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 12px;margin-top:20px}.gos:empty{display:none}.gos .go{margin-top:0}
 @media (max-width:620px){
   :root{--hb:58px}
@@ -170,6 +187,13 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
       <p class="why" id="pWhy" hidden></p>
       <div class="gos" id="pGos"></div>
       <p class="soon" id="pSoon" hidden>Opens soon.</p>
+    </div>
+  </div>
+  <div class="box" id="box" hidden>
+    <div class="boxin" role="dialog" aria-modal="true" aria-labelledby="bName">
+      <button class="x" id="bClose" type="button" aria-label="Close">&times;</button>
+      <div class="bh"><h2 id="bName"></h2><div class="btabs" id="bTabs" role="tablist"></div></div>
+      <div class="bbody" id="bBody"><p class="bload" id="bLoad">Opening&hellip;</p></div>
     </div>
   </div>
 </div>
@@ -292,18 +316,20 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   var $=function(id){return document.getElementById(id)};
   var realm=$('realm'),scene=$('scene'),map=$('map'),world=$('world'),panel=$('panel'),addr=$('addr');
   var reduce=matchMedia('(prefers-reduced-motion: reduce)');
+  var box=$('box'),bTabs=$('bTabs'),bBody=$('bBody'),bLoad=$('bLoad'),bFrame=null,ready=false,boxLast=null,drop=0;
+  var MODAL_DOOR=/[?&]door=(armory|forge|market|season|ranked)(?:&|$)/;
   // what each place opens; Joust, Races and Castle work today, the others open with the Ronin version
   var PLACES={
     stable:{tag:'Stable',name:'The Stable',text:'Feed, brush and kiss your horse. A well-kept horse hits harder.'},
     lists:{tag:'Joust',name:'The Lists',text:'',links:[['Joust','/realm/play/?door=bet']]},
-    tavern:{tag:'Tavern',name:'The Tavern',text:'Bet on a joust against the house. The third pass decides.',links:[['GAMBA','/realm/play/?door=gamba']]},
+    tavern:{tag:'Tavern',name:'The Tavern',text:'Quests for the knights of the realm.'},
     smith:{tag:'Blacksmith',name:'The Blacksmith',text:'Your armor sets, the mint and the forge.',links:[['Armory','/realm/play/?door=armory'],['Forge','/realm/play/?door=forge']]},
     market:{tag:'Market',name:'The Market',text:'Buy and sell the armor sets of the season, and get the season pass.',links:[['Market','/realm/play/?door=market'],['Season pass','/realm/play/?door=season'],['Buy $HORSKE','https://app.roninchain.com/swap?outputCurrency=0xc0Ca45c2e9448D3876Ca86220B2418C719298396',1]]},
     track:{tag:'Races',name:'HORSKingdom Racing',text:'Six Ronkes. One winner.',links:[['Play at Ronke Casino','https://games.ronkeverse.com/horske',1]]},
-    castle:{tag:'Castle',name:'The Castle',text:'The leaderboards of the season: ranked Elo and GAMBA.',links:[['Ranked board','/realm/play/?door=ranked'],['GAMBA board','/realm/play/?door=gamba&sub=lb']]}
+    castle:{tag:'Castle',name:'The Castle',text:'Swap for HORSKE, the coin of the realm, on Ronin.',links:[['Swap $HORSKE','https://app.roninchain.com/swap?outputCurrency=0xc0Ca45c2e9448D3876Ca86220B2418C719298396',1]]},
   };
   // demo alerts until the game sends real ones
-  var ALERTS={stable:'Your horse is waiting for its kiss.',tavern:'A GAMBA is open.'};
+  var ALERTS={stable:'Your horse is waiting for its kiss.',lists:'A GAMBA is open.'}; // the GAMBA moved to the Lists (16/10)
   // each drawing: the outline of every place (in the image's pixels) and where its plaque hangs
   var MAPS={
     land:{src:'/realm/assets/vila-larga.webp',w:1717,h:916,min:.5,focus:[895,416],box:[330,40,1460,792],spots:{
@@ -366,7 +392,9 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   }
   function light(id,on){world.querySelectorAll('[data-id="'+id+'"]').forEach(function(e){e.classList.toggle('on',on)})}
   function open(id){
-    var P=PLACES[id];last=document.activeElement;
+    var P=PLACES[id];
+    if((P.links||[]).some(function(L){return MODAL_DOOR.test(L[1])}))return openBox(id);
+    last=document.activeElement;
     $('pName').textContent=P.name;$('pText').textContent=P.text||'';$('pText').hidden=!P.text;
     $('pWhy').hidden=!ALERTS[id];$('pWhy').textContent=ALERTS[id]||'';
     var links=P.links||[],box=$('pGos');box.textContent='';$('pSoon').hidden=links.length>0;
@@ -381,6 +409,49 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
     var a=panel.animate([{opacity:1},{opacity:0}],{duration:reduce.matches?1:150,easing:'cubic-bezier(.4,0,1,1)'});
     a.finished.then(function(){panel.hidden=true;if(last&&last.focus)last.focus()});
   }
+
+  // Blacksmith, Market, Castle: their panes of the game open in a modal over the village (Rafael, 16/10: "tudo do
+  // kingdom sejam modais tirando a parte da justa"); a bout is the lists' part, and the pane sends the window there.
+  // One frame, kept while the modal is open; it goes 1.5 s after the modal closes (a purchase's save finishes first)
+  // and at once when the page is left, so a page restored from the back/forward cache never holds an old season
+  function doorOf(href){var m=/[?&]door=([a-z]+)/.exec(href);return m?m[1]:null}
+  function openBox(id){
+    var P=PLACES[id];boxLast=document.activeElement;clearTimeout(drop);
+    $('bName').textContent=P.name;bTabs.textContent='';
+    var first=null;
+    (P.links||[]).forEach(function(L){
+      if(MODAL_DOOR.test(L[1])){var b=document.createElement('button');b.type='button';b.className='go tab';b.textContent=L[0];b.setAttribute('role','tab');b.dataset.href=L[1];b.addEventListener('click',function(){pick(b)});bTabs.appendChild(b);if(!first)first=b}
+      else{var a=document.createElement('a');a.className='go';a.href=L[1];a.textContent=L[0];if(L[2]){a.target='_blank';a.rel='noopener'}bTabs.appendChild(a)}
+    });
+    box.hidden=false;
+    if(!reduce.matches)box.firstElementChild.animate([{opacity:0,transform:'translateY(10px) scale(.97)'},{opacity:1,transform:'none'}],{duration:240,easing:'cubic-bezier(.16,1,.3,1)'});
+    box.animate([{opacity:0},{opacity:1}],{duration:reduce.matches?1:180,easing:'linear'});
+    if(first)pick(first);
+    $('bClose').focus();
+  }
+  function pick(b){
+    bTabs.querySelectorAll('.tab').forEach(function(t){t.setAttribute('aria-selected',t===b?'true':'false')});
+    var href=b.dataset.href;
+    if(bFrame&&ready){bFrame.contentWindow.postMessage({type:'justa-door',door:doorOf(href)},location.origin);return}
+    if(!bFrame){bFrame=document.createElement('iframe');bFrame.title=$('bName').textContent;bBody.appendChild(bFrame)}
+    ready=false;bLoad.hidden=false;bFrame.src=href+(href.indexOf('?')<0?'?':'&')+'modal=1';
+  }
+  function dropFrame(){if(bFrame){bFrame.remove();bFrame=null;ready=false}}
+  function closeBox(now){
+    if(box.hidden)return;
+    var done=function(){box.hidden=true;drop=setTimeout(dropFrame,now?0:1500);if(boxLast&&boxLast.focus)boxLast.focus()};
+    if(now||reduce.matches){done();return}
+    box.animate([{opacity:1},{opacity:0}],{duration:150,easing:'cubic-bezier(.4,0,1,1)'}).finished.then(done);
+  }
+  window.closeBox=closeBox;
+  addEventListener('message',function(e){
+    if(e.origin!==location.origin||!bFrame||e.source!==bFrame.contentWindow||!e.data)return;
+    if(e.data.type==='justa-ready'){ready=true;bLoad.hidden=true}
+    if(e.data.type==='justa-close')closeBox();
+  });
+  $('bClose').addEventListener('click',function(){closeBox()});
+  box.addEventListener('click',function(e){if(e.target===box)closeBox()});
+  addEventListener('pagehide',function(){box.hidden=true;clearTimeout(drop);dropFrame()});
 
   // phones: drag the map with the mouse (touch scrolls natively); a drag is not a click
   var drag=null,moved=false;
@@ -400,7 +471,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   world.addEventListener('pointerout',function(e){var t=e.target.closest('[data-id]');if(t)light(t.getAttribute('data-id'),false)});
   $('pClose').addEventListener('click',close);
   panel.addEventListener('click',function(e){if(e.target===panel)close()});
-  addEventListener('keydown',function(e){if(e.key==='Escape')close()});
+  addEventListener('keydown',function(e){if(e.key==='Escape'){if(!box.hidden)closeBox();else close()}});
   var rt=0;addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(build,120)});
 
   // from the gate into the realm, and back out with Log out
@@ -411,7 +482,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
     scene.animate([{opacity:1},{opacity:0}],{duration:reduce.matches?1:260,easing:'cubic-bezier(.4,0,1,1)',fill:'forwards'}).finished.then(function(){scene.style.display='none'});
   };
   $('logout').addEventListener('click',function(){
-    window.realmAcct=null;close();realm.setAttribute('aria-hidden','true');realm.style.visibility='';
+    window.realmAcct=null;close();closeBox(true);realm.setAttribute('aria-hidden','true');realm.style.visibility='';
     scene.getAnimations().forEach(function(a){a.cancel()});scene.style.display='';
     if(window.gateReset)gateReset();
   });
