@@ -459,7 +459,7 @@ document.querySelectorAll('[data-copy]').forEach(function(b){
   var slides=[].slice.call(hero.querySelectorAll('.slide')),dots=[].slice.call(hero.querySelectorAll('.dots button'));
   if(slides.length<2)return;
   var subEl=hero.querySelector('.crier .subtitle'),tagEl=hero.querySelector('.crier .tagline');
-  var race=document.getElementById('slide-race'),i=0,timer=null,over=false,reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var race=document.getElementById('slide-race'),i=0,timer=null,reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
   (window.requestIdleCallback||function(f){setTimeout(f,1200)})(function(){if(race)race.classList.add('ready')});
   function go(n){
     i=(n+slides.length)%slides.length;
@@ -473,10 +473,9 @@ document.querySelectorAll('[data-copy]').forEach(function(b){
     dots.forEach(function(d,k){d.setAttribute('aria-current',k===i?'true':'false')});
   }
   function stop(){if(timer){clearInterval(timer);timer=null}}
-  function play(){stop();if(reduce||over||document.hidden)return;timer=setInterval(function(){go(i+1)},8000)}
+  // turns by itself every 8 s, even under the mouse (the hero fills the screen); only a hidden tab pauses it
+  function play(){stop();if(document.hidden)return;timer=setInterval(function(){go(i+1)},8000)}
   dots.forEach(function(d,k){d.addEventListener('click',function(){go(k);play()})});
-  hero.addEventListener('mouseenter',function(){over=true;play()});
-  hero.addEventListener('mouseleave',function(){over=false;play()});
   document.addEventListener('visibilitychange',play);
   play();
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){dispatchEvent(new Event('resize'))});
