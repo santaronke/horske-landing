@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Horske Realm</title>
+<title>Horskingdom</title>
 <link rel="icon" href="/realm/assets/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -154,7 +154,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   <header class="top">
     <span class="bars" aria-hidden="true"><i class="bar m"></i><i class="bar l"></i><i class="bar r"></i></span>
     <div class="in">
-      <a class="brand" href="/" aria-label="Horske, back to the home page"><img src="/realm/assets/logo.webp" alt=""><b>Horske Realm</b></a>
+      <a class="brand" href="/" aria-label="Horskingdom, back to the home page"><img src="/realm/assets/logo.webp" alt=""><b>Horskingdom</b></a>
       <div class="acct">
         <span class="addr" id="addr" hidden><img src="/realm/assets/ronin.png" alt="" width="26" height="26"><span class="l"></span><span class="s"></span></span>
         <button class="logout" id="logout" type="button" aria-label="Log out"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.5 2.5h-4v11h4M10 4.5 13.5 8 10 11.5M13.5 8H6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Log out</span></button>
@@ -175,10 +175,10 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
 </div>
 <div class="scene" id="scene">
   <div class="sky" id="sky"></div>
-  <div class="win" id="win"><div class="vila" id="vila" role="img" aria-label="The village of the Horske Realm, seen from above"></div></div>
+  <div class="win" id="win"><div class="vila" id="vila" role="img" aria-label="The village of Horskingdom, seen from above"></div></div>
   <main class="ui">
     <div class="words">
-      <h1 class="title" id="title">Horske Realm</h1>
+      <h1 class="title" id="title">Horskingdom</h1>
       <p class="sub" id="sub">Show thy wallet at the gate, traveler.</p>
     </div>
     <div class="slot" id="slot">
@@ -295,11 +295,11 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   // what each place opens; Joust, Races and Castle work today, the others open with the Ronin version
   var PLACES={
     stable:{tag:'Stable',name:'The Stable',text:'Feed, brush and kiss your horse. A well-kept horse hits harder.'},
-    lists:{tag:'Joust',name:'The Lists',text:'Joust the rivals of the season, or another knight in ranked.',links:[['Joust','/realm/play/?door=rivals'],['Ranked','/realm/play/?door=ranked']]},
+    lists:{tag:'Joust',name:'The Lists',text:'',links:[['Joust','/realm/play/?door=bet']]},
     tavern:{tag:'Tavern',name:'The Tavern',text:'Bet on a joust against the house. The third pass decides.',links:[['GAMBA','/realm/play/?door=gamba']]},
     smith:{tag:'Blacksmith',name:'The Blacksmith',text:'Your armor sets, the mint and the forge.',links:[['Armory','/realm/play/?door=armory'],['Forge','/realm/play/?door=forge']]},
     market:{tag:'Market',name:'The Market',text:'Buy and sell the armor sets of the season, and get the season pass.',links:[['Market','/realm/play/?door=market'],['Season pass','/realm/play/?door=season'],['Buy $HORSKE','https://app.roninchain.com/swap?outputCurrency=0xc0Ca45c2e9448D3876Ca86220B2418C719298396',1]]},
-    track:{tag:'Races',name:'Horske Racing',text:'Six Ronkes. One winner.',links:[['Play at Ronke Casino','https://games.ronkeverse.com/horske',1]]},
+    track:{tag:'Races',name:'Horskingdom Racing',text:'Six Ronkes. One winner.',links:[['Play at Ronke Casino','https://games.ronkeverse.com/horske',1]]},
     castle:{tag:'Castle',name:'The Castle',text:'The leaderboards of the season: ranked Elo and GAMBA.',links:[['Ranked board','/realm/play/?door=ranked'],['GAMBA board','/realm/play/?door=gamba&sub=lb']]}
   };
   // demo alerts until the game sends real ones
@@ -367,7 +367,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   function light(id,on){world.querySelectorAll('[data-id="'+id+'"]').forEach(function(e){e.classList.toggle('on',on)})}
   function open(id){
     var P=PLACES[id];last=document.activeElement;
-    $('pName').textContent=P.name;$('pText').textContent=P.text;
+    $('pName').textContent=P.name;$('pText').textContent=P.text||'';$('pText').hidden=!P.text;
     $('pWhy').hidden=!ALERTS[id];$('pWhy').textContent=ALERTS[id]||'';
     var links=P.links||[],box=$('pGos');box.textContent='';$('pSoon').hidden=links.length>0;
     links.forEach(function(L){var a=document.createElement('a');a.className='go';a.href=L[1];a.textContent=L[0];if(L[2]){a.target='_blank';a.rel='noopener'}box.appendChild(a)});
