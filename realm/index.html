@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Horske Realm</title>
+<link rel="icon" href="/realm/assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@700;900&family=IM+Fell+English:ital@0;1&family=Gelasio:wght@700&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="/realm/assets/vila-deitada.webp" media="(orientation:landscape)">
+<link rel="preload" as="image" href="/realm/assets/vila-em-pe.webp" media="(orientation:portrait)">
+<style>
+:root{
+  --ink:#1d130b;--night:#0b1038;--gold:#f0bd45;--gold-3:#8a5a0e;--ice:#7fdcff;--violet:#a98bff;
+  --gothic:"Grenze Gotisch","Times New Roman",serif;--fell:"IM Fell English",Georgia,serif;--geo:"Gelasio",Georgia,serif;
+  --vila:url(/realm/assets/vila-deitada.webp);
+  --d:min(60vmin,440px);
+}
+@media (orientation:portrait){:root{--vila:url(/realm/assets/vila-em-pe.webp);--d:min(80vw,50vh,440px)}}
+@media (max-height:520px) and (orientation:landscape){:root{--d:min(56vh,440px)}}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--night)}
+body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
+
+/* one stacking context: night sky < village window < mist < light rim < words < flash */
+.scene{position:fixed;inset:0;z-index:10;isolation:isolate}
+.sky{position:absolute;inset:-10%;z-index:0;background:
+  radial-gradient(circle at 12% 18%,#fff 0 1.5px,transparent 2.5px),radial-gradient(circle at 82% 12%,#fff 0 1.5px,transparent 2.5px),
+  radial-gradient(circle at 70% 78%,#fff 0 1px,transparent 2px),radial-gradient(circle at 24% 72%,#fff 0 1px,transparent 2px),
+  radial-gradient(circle at 46% 9%,#ffe7a0 0 1.5px,transparent 2.5px),radial-gradient(circle at 92% 46%,#fff 0 1px,transparent 2px),
+  radial-gradient(circle at 6% 52%,#ffe7a0 0 1px,transparent 2px),radial-gradient(circle at 58% 92%,#fff 0 1px,transparent 2px),
+  radial-gradient(circle at 50% 50%,rgba(169,139,255,.28) 0,rgba(127,220,255,.10) 22%,transparent 42%),
+  radial-gradient(ellipse at 50% 50%,#25307a 0,#151d58 45%,var(--night) 80%)}
+.win{position:fixed;inset:0;z-index:2;pointer-events:none}
+.vila{position:absolute;inset:0;background:var(--vila) center/cover no-repeat;will-change:transform}
+.ui{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(10px,2.6vh,24px);padding:16px}
+.words{display:flex;flex-direction:column;align-items:center;gap:6px}
+.title{position:relative;z-index:5;margin:0;font-family:var(--gothic);font-weight:900;font-size:clamp(44px,7vw,92px);line-height:.9;color:var(--gold);-webkit-text-stroke:3px var(--ink);paint-order:stroke fill;text-shadow:0 4px 0 var(--gold-3),0 8px 0 var(--ink);text-align:center}
+.sub{position:relative;z-index:5;margin:0;font-style:italic;font-size:clamp(16px,2vw,20px);color:#d9e1ff;text-align:center}
+.slot{position:relative;flex:none;width:var(--d);aspect-ratio:1}
+
+/* mist over the village while the portal waits */
+.mist{position:absolute;z-index:3;inset:12%;border-radius:50%;overflow:hidden;pointer-events:none}
+.mist svg{width:100%;height:100%;opacity:.6;filter:blur(3px);animation:spin 26s linear infinite}
+
+/* the light rim: soft halo, two bands of swirling energy, a bright edge, sparks */
+.rim{position:absolute;inset:0;z-index:4;pointer-events:none;will-change:transform}
+.rim i,.rim b{position:absolute;border-radius:50%}
+.halo{inset:-8%;background:radial-gradient(circle closest-side,transparent 62%,rgba(127,220,255,.30) 72%,rgba(169,139,255,.16) 84%,transparent 100%)}
+.band{inset:3%;filter:blur(1.4px);animation:spin 7s linear infinite;
+  -webkit-mask:radial-gradient(circle closest-side,transparent 79%,#000 84%,#000 92%,transparent 100%);mask:radial-gradient(circle closest-side,transparent 79%,#000 84%,#000 92%,transparent 100%)}
+.band.a{background:conic-gradient(from 0deg,transparent 0 6%,var(--ice) 12%,transparent 20%,var(--violet) 30%,transparent 38%,#fff6c8 46%,transparent 52%,var(--ice) 62%,transparent 70%,var(--violet) 82%,transparent 90%)}
+.band.b{inset:0;opacity:.75;animation-duration:11s;animation-direction:reverse;background:conic-gradient(from 90deg,transparent 0 10%,#bdf1ff 16%,transparent 24%,#d7c6ff 40%,transparent 48%,#bdf1ff 66%,transparent 74%,#ffe7a0 88%,transparent 96%)}
+.edge{inset:12%;box-shadow:0 0 0 2px rgba(235,250,255,.95),0 0 14px 5px rgba(127,220,255,.85),0 0 38px 12px rgba(169,139,255,.45),inset 0 0 18px 7px rgba(127,220,255,.8),inset 0 0 44px 16px rgba(169,139,255,.35)}
+.spark{inset:0;animation:spin var(--t) linear infinite;animation-delay:var(--at)}
+.spark::after{content:"";position:absolute;left:50%;top:var(--y);width:var(--s);height:var(--s);margin-left:calc(var(--s)/-2);border-radius:50%;background:#fff;box-shadow:0 0 6px 2px var(--c);animation:twinkle var(--tw) ease-in-out infinite alternate}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes twinkle{from{opacity:.25;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+
+.flash{position:fixed;inset:0;z-index:6;background:radial-gradient(circle,#ffffff,#d8f6ff 45%,#b9a6ff);opacity:0;pointer-events:none}
+.wallet{position:relative;z-index:5;display:inline-flex;align-items:center;gap:10px;padding:6px 18px 6px 6px;border:0;border-radius:10px;cursor:pointer;font-family:var(--geo);font-weight:700;font-size:18px;line-height:1;letter-spacing:.03em;color:#2b1a0d;white-space:nowrap;background:linear-gradient(#ffd85a,#e0a91f);box-shadow:0 0 0 2px #0a1636,0 5px 0 2px #0a1636,inset 0 3px 0 rgba(255,255,255,.5);transition:transform .12s}
+.wallet img{width:32px;height:32px;border-radius:8px;flex:none}
+.wallet:hover{transform:translateY(-2px)}
+.wallet:active{transform:translateY(3px)}
+.wallet:focus-visible{outline:3px solid #fff;outline-offset:4px}
+.wallet[aria-busy="true"]{cursor:progress;opacity:.85}
+.inside .sky,.inside .ui{display:none}
+.inside .win{clip-path:none!important}
+@media (max-height:520px) and (orientation:landscape){
+  .ui{flex-direction:row;column-gap:32px}
+  .title{font-size:44px;-webkit-text-stroke:2px var(--ink)}
+  .wallet{font-size:15px;padding:4px 12px 4px 4px}.wallet img{width:26px;height:26px}
+}
+@media (prefers-reduced-motion:reduce){.mist svg,.band,.spark,.spark::after{animation:none}}
+
+/* ---------- the realm: wood header, the village map, the parchment ---------- */
+:root{--hb:64px}
+.realm{position:fixed;inset:0;z-index:1;background:#2d5a1e}
+.top{--bh:calc(var(--hb)*124/112);--cap:calc(var(--bh)*100/124);--fade:calc(var(--bh)*40/124);position:absolute;top:0;left:0;right:0;z-index:3;height:var(--hb);background:#3b200f}
+.bars{position:absolute;inset:0 0 auto;height:var(--bh);pointer-events:none;filter:drop-shadow(0 4px 4px rgba(0,0,0,.45))}
+.bar{position:absolute;top:0;height:100%;background:0 0/auto 100% no-repeat}
+.bar.m{left:calc(var(--cap) - var(--fade));right:calc(var(--cap) - var(--fade));background-image:url(/realm/assets/bar-mid.webp);background-repeat:repeat-x}
+.bar.l{left:0;width:var(--cap);background-image:url(/realm/assets/bar-l.webp)}
+.bar.r{right:0;width:var(--cap);background-image:url(/realm/assets/bar-r.webp);background-position:100% 0}
+.top .in{position:relative;z-index:2;display:flex;align-items:center;gap:14px;height:100%;padding-inline:calc(var(--cap)*.42)}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand img{width:44px;height:44px;border-radius:50%;border:3px solid var(--ink)}
+.brand b{font-family:var(--gothic);font-weight:900;font-size:28px;color:var(--gold);letter-spacing:.5px;-webkit-text-stroke:1.5px var(--ink);paint-order:stroke fill;text-shadow:0 3px 0 var(--ink);white-space:nowrap}
+.acct{display:flex;align-items:center;gap:10px}
+.addr{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 12px 0 4px;border-radius:999px;background:#1a0e05;box-shadow:0 0 0 2px #d9a947,0 0 0 3.5px var(--ink);font-family:ui-monospace,Consolas,monospace;font-weight:700;font-size:15px;color:#f6e3b0;white-space:nowrap}
+.addr[hidden]{display:none}
+.addr img{width:26px;height:26px;border-radius:50%}
+.addr::after{content:"";width:8px;height:8px;border-radius:50%;background:#2fb457;box-shadow:0 0 0 2px var(--ink)}
+.addr .s{display:none}
+.logout{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px;border:0;border-radius:8px;cursor:pointer;font-family:var(--gothic);font-weight:700;font-size:17px;line-height:1;color:#fff;white-space:nowrap;background:linear-gradient(#c8363c,#8e1a1f);box-shadow:0 0 0 2px #d9a947,0 0 0 3.5px var(--ink),inset 0 2px 0 rgba(255,255,255,.3);transition:transform .12s}
+.logout svg{width:16px;height:16px;flex:none}
+.logout:hover{transform:translateY(-1px)}
+.logout:active{transform:translateY(2px)}
+.logout:focus-visible{outline:3px solid #fff;outline-offset:4px}
+
+/* the map scrolls (drag it) when the screen is narrower or shorter than the village */
+.map{position:absolute;left:0;right:0;bottom:0;top:var(--hb);overflow:auto;scrollbar-width:none;overscroll-behavior:contain;cursor:grab}
+.map::-webkit-scrollbar{display:none}
+.map.drag{cursor:grabbing}
+.world{position:relative}
+.world svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.spot{cursor:pointer;outline:none}
+.spot .lit{opacity:0;filter:brightness(1.22) saturate(1.15);transition:opacity .18s cubic-bezier(.2,0,0,1);pointer-events:none}
+.spot .hit{fill:transparent;stroke:none}
+.spot:hover .lit,.spot.on .lit,.spot:focus-visible .lit{opacity:1}
+.spot:focus-visible .hit{stroke:#fff6c8;stroke-width:5;stroke-dasharray:14 10}
+.tag{position:absolute;z-index:2;transform:translate(-50%,-100%);display:inline-grid;place-items:center;height:36px;min-width:120px;padding:0 24px 2px;border:0;background:url(/realm/assets/placa.webp) center/100% 100% no-repeat;font-family:var(--gothic);font-weight:700;font-size:20px;line-height:1;color:#fff3d6;text-shadow:0 2px 0 #3a1d08,1px 0 0 #3a1d08,-1px 0 0 #3a1d08;white-space:nowrap;cursor:pointer;filter:drop-shadow(0 3px 2px rgba(0,0,0,.45));transition:transform .2s cubic-bezier(.3,1.5,.5,1)}
+.tag:hover,.tag.on{transform:translate(-50%,calc(-100% - 5px))}
+.tag:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.alert{position:absolute;right:-14px;top:-16px;width:30px;height:auto;animation:pop .5s cubic-bezier(.3,1.6,.5,1) .3s both;pointer-events:none}
+@keyframes pop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
+
+/* the parchment that opens for each place */
+.panel{position:absolute;inset:0;z-index:4;display:grid;place-items:center;padding:16px;background:rgba(8,10,30,.55)}
+.panel[hidden]{display:none}
+.parch{position:relative;width:min(420px,100%);padding:30px 28px 26px;background:#f6ead0;border:3px solid var(--ink);box-shadow:0 10px 0 var(--ink);text-align:center;color:var(--ink)}
+.parch::before{content:"";position:absolute;inset:9px;border:2px solid #c98c1d;pointer-events:none}
+.parch h2{margin:0;font-family:var(--gothic);font-weight:900;font-size:40px;line-height:1;color:#1d3778}
+.parch p{margin:12px 0 0;font-size:19px;line-height:1.4}
+.parch .why{margin-top:10px;font-style:italic;color:#8e1a1f}
+.parch .soon{margin-top:18px;font-style:italic;color:#5a4630}
+.parch .x{position:absolute;right:8px;top:6px;z-index:1;width:40px;height:40px;border:0;background:none;font-family:var(--geo);font-size:30px;line-height:1;color:var(--ink);cursor:pointer}
+.parch .x:focus-visible{outline:3px solid #1d3778}
+.go{position:relative;display:inline-flex;align-items:center;margin-top:20px;padding:10px 20px;border-radius:10px;text-decoration:none;font-family:var(--geo);font-weight:700;font-size:18px;color:#2b1a0d;background:linear-gradient(#ffd85a,#e0a91f);box-shadow:0 0 0 2px #0a1636,0 5px 0 2px #0a1636,inset 0 3px 0 rgba(255,255,255,.5);transition:transform .12s}
+.go:hover{transform:translateY(-2px)}
+.go:focus-visible{outline:3px solid #1d3778;outline-offset:4px}
+.go[hidden],.soon[hidden],.why[hidden]{display:none}
+@media (max-width:620px){
+  :root{--hb:58px}
+  .top .in{padding-inline:16px;gap:10px}
+  .brand b{display:none}
+  .addr{height:30px;padding:0 7px;font-size:12px}
+  .addr img,.addr::after,.addr .l{display:none}
+  .addr .s{display:inline}
+  .logout{height:30px;padding:0 8px}
+  .logout span{display:none}
+  .tag{height:31px;min-width:96px;padding:0 18px 2px;font-size:17px}
+  .alert{width:26px;right:-11px;top:-14px}
+  .parch h2{font-size:34px}
+}
+@media (prefers-reduced-motion:reduce){.tag,.spot .lit,.alert{transition:none;animation:none}}
+</style>
+</head>
+<body>
+<div class="realm" id="realm" aria-hidden="true">
+  <header class="top">
+    <span class="bars" aria-hidden="true"><i class="bar m"></i><i class="bar l"></i><i class="bar r"></i></span>
+    <div class="in">
+      <a class="brand" href="/" aria-label="Horske, back to the home page"><img src="/realm/assets/logo.webp" alt=""><b>Horske Realm</b></a>
+      <div class="acct">
+        <span class="addr" id="addr" hidden><img src="/realm/assets/ronin.png" alt="" width="26" height="26"><span class="l"></span><span class="s"></span></span>
+        <button class="logout" id="logout" type="button" aria-label="Log out"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.5 2.5h-4v11h4M10 4.5 13.5 8 10 11.5M13.5 8H6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Log out</span></button>
+      </div>
+    </div>
+  </header>
+  <div class="map" id="map"><div class="world" id="world"></div></div>
+  <div class="panel" id="panel" hidden>
+    <div class="parch" role="dialog" aria-modal="true" aria-labelledby="pName">
+      <button class="x" id="pClose" type="button" aria-label="Close">&times;</button>
+      <h2 id="pName"></h2>
+      <p id="pText"></p>
+      <p class="why" id="pWhy" hidden></p>
+      <a class="go" id="pGo" target="_blank" rel="noopener" hidden></a>
+      <p class="soon" id="pSoon" hidden>Opens soon.</p>
+    </div>
+  </div>
+</div>
+<div class="scene" id="scene">
+  <div class="sky" id="sky"></div>
+  <div class="win" id="win"><div class="vila" id="vila" role="img" aria-label="The village of the Horske Realm, seen from above"></div></div>
+  <main class="ui">
+    <div class="words">
+      <h1 class="title" id="title">Horske Realm</h1>
+      <p class="sub" id="sub">Show thy wallet at the gate, traveler.</p>
+    </div>
+    <div class="slot" id="slot">
+      <div class="mist" id="mist"><svg viewBox="-100 -100 200 200" aria-hidden="true"><g id="arms" fill="none" stroke-linecap="round"></g></svg></div>
+      <div class="rim" id="rim" aria-hidden="true">
+        <i class="halo"></i><i class="band a"></i><i class="band b"></i><i class="edge"></i>
+        <b class="spark" style="--t:9s;--at:-1s;--y:6%;--s:5px;--c:#7fdcff;--tw:.9s"></b>
+        <b class="spark" style="--t:13s;--at:-6s;--y:3%;--s:4px;--c:#a98bff;--tw:1.3s"></b>
+        <b class="spark" style="--t:7s;--at:-3s;--y:9%;--s:3px;--c:#ffe7a0;--tw:.7s"></b>
+        <b class="spark" style="--t:11s;--at:-8s;--y:5%;--s:4px;--c:#7fdcff;--tw:1.1s"></b>
+        <b class="spark" style="--t:15s;--at:-12s;--y:8%;--s:3px;--c:#a98bff;--tw:1.6s"></b>
+      </div>
+    </div>
+    <div class="words">
+      <button class="wallet" id="enter" type="button"><img src="/realm/assets/ronin.png" alt="" width="34" height="34"><span>Connect Ronin Wallet</span></button>
+    </div>
+  </main>
+  <div class="flash" id="flash"></div>
+</div>
+
+<script>
+(function(){
+  // the mist: three soft spiral arms over the village
+  var NS='http://www.w3.org/2000/svg',arms=document.getElementById('arms');
+  for(var k=0;k<3;k++){
+    var d='',off=k*2*Math.PI/3;
+    for(var t=0;t<=1;t+=.02){var th=off+t*3.2*Math.PI,r=6+t*96;d+=(t?'L':'M')+(r*Math.cos(th)).toFixed(1)+' '+(r*Math.sin(th)).toFixed(1)}
+    [['#a98bff',22,.45],['#7fdcff',10,.6],['#ffffff',3,.7]].forEach(function(s){
+      var p=document.createElementNS(NS,'path');p.setAttribute('d',d);p.setAttribute('stroke',s[0]);p.setAttribute('stroke-width',s[1]);p.setAttribute('opacity',s[2]);arms.appendChild(p);
+    });
+  }
+})();
+
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var scene=$('scene'),sky=$('sky'),slot=$('slot'),rim=$('rim'),mist=$('mist'),win=$('win'),vila=$('vila'),flash=$('flash');
+  var btn=$('enter'),title=$('title'),sub=$('sub'),again=$('again');
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)'),busy=false,g;
+  var DEMO=true;                    // until the game is on Ronin: Connect just walks in, no wallet
+  // cubic-bezier as a function, to sample the approach into keyframes
+  function bez(x1,y1,x2,y2){return function(x){var t=x;for(var i=0;i<8;i++){var f=3*x1*t*(1-t)*(1-t)+3*x2*t*t*(1-t)+t*t*t-x,d=3*x1*(1-t)*(1-t)+6*(x2-x1)*t*(1-t)+3*(1-x2)*t*t;if(Math.abs(f)<1e-5)break;t=Math.min(1,Math.max(0,t-f/(d||1e-6)))}return 3*y1*t*(1-t)*(1-t)+3*y2*t*t*(1-t)+t*t*t}}
+  var IN=bez(.62,0,.9,.32),IO=bez(.65,0,.35,1);   // the portal is pulled in (slow, then fast); the village eases in and out
+
+  // where the portal is: its center, the window radius (under the bright edge, 38% of the slot), how far it must grow
+  // to cover the screen (S), and how small the village looks inside it (V0). The village is drawn to fill the screen at
+  // scale 1; inside the portal it is smaller, but never smaller than the window, or its edge would show.
+  function geom(){
+    var r=slot.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,R=r.width*.38,W=innerWidth,H=innerHeight;
+    var far=Math.max(Math.hypot(cx,cy),Math.hypot(W-cx,cy),Math.hypot(cx,H-cy),Math.hypot(W-cx,H-cy));
+    var m=Math.min(cx,W-cx,cy,H-cy);
+    return {cx:cx,cy:cy,R:R,m:m,S:far/R*1.15,V0:Math.max(.6,Math.min(.95,1.15*R/m))};
+  }
+  function circ(r){return 'circle('+r.toFixed(1)+'px at '+g.cx.toFixed(1)+'px '+g.cy.toFixed(1)+'px)'}
+  function place(){                 // the waiting portal: the village already shows inside it
+    if(busy||scene.classList.contains('inside'))return;
+    g=geom();win.style.clipPath=circ(g.R);
+    vila.style.transformOrigin=g.cx+'px '+g.cy+'px';vila.style.transform='scale('+g.V0+')';
+  }
+  function inside(){scene.classList.add('inside');busy=false;btn.removeAttribute('aria-busy');if(window.enterRealm)enterRealm()}
+
+  function enter(){
+    if(busy)return;busy=true;place();
+    if(reduce.matches){             // no zoom: the gate simply fades into the village
+      vila.style.transform='none';win.style.clipPath='none';
+      win.animate([{opacity:0},{opacity:1}],{duration:280,easing:'cubic-bezier(.2,0,0,1)'}).finished.then(inside);
+      return;
+    }
+    var F='forwards',GO=520,GO_D=1500,n=40,kr=[],kc=[],kv=[];
+    // the words leave first, quietly; the mist clears
+    [title,sub,btn].forEach(function(e,i){e.animate([{opacity:1,transform:'none'},{opacity:0,transform:'translateY(8px)'}],{duration:220,delay:i*40,easing:'cubic-bezier(.4,0,1,1)',fill:F})});
+    mist.animate([{opacity:1,transform:'scale(1)'},{opacity:0,transform:'scale(1.25)'}],{duration:520,easing:'cubic-bezier(.16,1,.3,1)',fill:F});
+    // the portal comes at you. The ring grows faster than the village inside, so the village keeps looking far below
+    // until the ring passes your sides; then the village lands at full size.
+    for(var i=0;i<=n;i++){
+      var p=i/n,s=1+(g.S-1)*IN(p),r=g.R*s,v=Math.max(g.V0+(1-g.V0)*IO(p),Math.min(1,r/g.m*1.04));
+      kr.push({offset:p,transform:'scale('+s.toFixed(3)+')'});kc.push({offset:p,clipPath:circ(r)});kv.push({offset:p,transform:'scale('+v.toFixed(4)+')'});
+    }
+    var T={delay:GO,duration:GO_D,easing:'linear',fill:F};
+    rim.animate(kr,T);win.animate(kc,T);
+    sky.animate([{opacity:1,transform:'scale(1)'},{opacity:0,transform:'scale(1.4)'}],{delay:GO,duration:GO_D,easing:'cubic-bezier(.62,0,.9,.32)',fill:F});
+    flash.animate([{opacity:0},{opacity:.4,offset:.3},{opacity:0}],{delay:GO+GO_D-260,duration:480,easing:'linear',fill:F});
+    vila.animate(kv,T).finished.then(inside);
+  }
+  // a tap during the entrance skips to the end
+  scene.addEventListener('pointerdown',function(e){
+    if(!busy||e.target===btn)return;
+    document.getAnimations().forEach(function(a){if(a.effect&&a.effect.getTiming().iterations!==Infinity)a.finish()});
+  });
+  btn.addEventListener('click',function(){
+    if(busy)return;
+    var p=window.ronin&&window.ronin.provider;
+    if(DEMO||!p){enter();return}    // demo: the gate opens without asking for the wallet
+    btn.setAttribute('aria-busy','true');btn.querySelector('span').textContent='Connecting…';
+    p.request({method:'eth_requestAccounts'}).then(function(a){btn.removeAttribute('aria-busy');if(a&&a[0]){window.realmAcct=a[0];enter()}else reset()},reset);
+  });
+  function reset(){
+    document.getAnimations().forEach(function(a){if(a.effect&&a.effect.getTiming().iterations!==Infinity)a.cancel()});
+    scene.classList.remove('inside');busy=false;btn.removeAttribute('aria-busy');btn.querySelector('span').textContent='Connect Ronin Wallet';
+    place();
+  }
+  window.gateReset=reset;
+  addEventListener('resize',place);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(place);
+  place();
+})();
+</script>
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var realm=$('realm'),scene=$('scene'),map=$('map'),world=$('world'),panel=$('panel'),addr=$('addr');
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)');
+  // what each place opens; Joust, Races and Castle work today, the others open with the Ronin version
+  var PLACES={
+    stable:{tag:'Stable',name:'The Stable',text:'Feed, brush and kiss your horse. A well-kept horse hits harder.'},
+    lists:{tag:'Joust',name:'The Lists',text:'Joust other Ronkes: ten fights a day, and ranked never closes.',go:'Joust now',href:'https://www.spawn.co/@kazuo/justa-dos-ronkes'},
+    tavern:{tag:'Tavern',name:'The Tavern',text:'Bet on a joust. The third pass decides.'},
+    smith:{tag:'Blacksmith',name:'The Blacksmith',text:'Forge the armor sets of the season.'},
+    market:{tag:'Market',name:'The Market',text:'Feed, brushes, medicine and the season pass.'},
+    track:{tag:'Races',name:'Horske Racing',text:'Six Ronkes. One winner.',go:'Play at Ronke Casino',href:'https://games.ronkeverse.com/horske'},
+    castle:{tag:'Castle',name:'The Castle',text:'The $HORSKE treasury and the ranked prize pot.',go:'Buy $HORSKE',href:'https://app.roninchain.com/swap?outputCurrency=0xc0Ca45c2e9448D3876Ca86220B2418C719298396'}
+  };
+  // demo alerts until the game sends real ones
+  var ALERTS={stable:'Your horse is waiting for its kiss.',tavern:'A GAMBA is open.'};
+  // each drawing: the outline of every place (in the image's pixels) and where its plaque hangs
+  var MAPS={
+    land:{src:'/realm/assets/vila-deitada.webp',w:1536,h:1024,min:.55,focus:[768,500],spots:{
+      lists:{p:'120,250 165,205 255,160 350,130 440,85 500,100 625,150 630,280 600,330 470,420 310,480 260,470 125,390',t:[380,92]},
+      castle:{p:'975,90 1000,50 1110,20 1240,60 1285,110 1275,250 1180,290 1060,320 1000,300 985,250 970,170',t:[900,190]},
+      tavern:{p:'565,440 640,380 690,300 820,295 880,350 925,410 925,520 840,540 700,540 610,500',t:[760,292]},
+      smith:{p:'1075,450 1130,420 1200,375 1250,340 1290,350 1385,450 1490,480 1490,560 1400,605 1250,590 1100,580 1060,560',t:[1255,338]},
+      stable:{p:'60,700 120,650 180,590 330,530 380,580 470,620 520,640 520,700 480,760 420,800 330,820 220,860 80,800',t:[250,528]},
+      market:{p:'580,700 640,640 690,600 830,600 880,630 950,680 950,760 890,790 800,800 720,800 600,780',t:[765,594]},
+      track:{p:'1000,840 1040,760 1100,650 1270,610 1350,620 1430,640 1485,700 1485,840 1440,890 1300,930 1100,930 1020,900',t:[1245,805]}}},
+    port:{src:'/realm/assets/vila-em-pe.webp',w:1024,h:1536,min:.5,focus:[520,690],spots:{
+      lists:{p:'70,520 120,470 230,410 290,385 330,400 420,440 430,520 400,560 300,610 200,660 140,630 75,600',t:[250,388]},
+      castle:{p:'655,420 680,370 760,330 850,385 865,420 860,500 800,540 700,580 665,540 655,480',t:[760,336]},
+      tavern:{p:'375,660 430,610 470,555 560,550 600,600 630,650 630,720 560,740 430,730 380,700',t:[510,550]},
+      smith:{p:'715,700 760,660 820,610 870,600 940,680 1010,720 1010,770 930,790 800,780 715,760',t:[860,598]},
+      stable:{p:'35,880 80,830 120,790 230,750 260,770 320,800 350,830 350,900 300,960 210,980 120,960 40,930',t:[170,752]},
+      market:{p:'380,870 420,830 460,790 560,790 620,820 645,870 640,920 590,950 450,950 380,920',t:[510,788]},
+      track:{p:'675,950 700,900 740,830 860,800 940,800 990,850 1000,940 960,1010 860,1040 740,1040 690,1010',t:[845,968]}}}
+  };
+  var cur=null,last=null;
+
+  function build(){
+    var M=innerHeight>innerWidth?MAPS.port:MAPS.land,mw=map.clientWidth,mh=map.clientHeight;
+    var k=Math.max(mw/M.w,mh/M.h,M.min),W=Math.round(M.w*k),H=Math.round(M.h*k);
+    var svg='<svg viewBox="0 0 '+M.w+' '+M.h+'"><defs>',spots='',tags='';
+    for(var id in M.spots){
+      var S=M.spots[id],P=PLACES[id];
+      svg+='<clipPath id="c-'+id+'"><polygon points="'+S.p+'"/></clipPath>';
+      spots+='<g class="spot" data-id="'+id+'" tabindex="0" role="button" aria-label="'+P.name+'"><image class="lit" href="'+M.src+'" width="'+M.w+'" height="'+M.h+'" clip-path="url(#c-'+id+')"/><polygon class="hit" points="'+S.p+'"/></g>';
+      tags+='<button class="tag" type="button" data-id="'+id+'" tabindex="-1" style="left:'+(S.t[0]/M.w*100).toFixed(2)+'%;top:'+(S.t[1]/M.h*100).toFixed(2)+'%">'+P.tag+(ALERTS[id]?'<img class="alert" src="/realm/assets/alerta.webp" alt="">':'')+'</button>';
+    }
+    svg+='</defs><image href="'+M.src+'" width="'+M.w+'" height="'+M.h+'"/>'+spots+'</svg>';
+    world.style.width=W+'px';world.style.height=H+'px';world.innerHTML=svg+tags;
+    if(M!==cur){map.scrollLeft=M.focus[0]*k-mw/2;map.scrollTop=M.focus[1]*k-mh/2}
+    cur=M;
+  }
+  function light(id,on){world.querySelectorAll('[data-id="'+id+'"]').forEach(function(e){e.classList.toggle('on',on)})}
+  function open(id){
+    var P=PLACES[id];last=document.activeElement;
+    $('pName').textContent=P.name;$('pText').textContent=P.text;
+    $('pWhy').hidden=!ALERTS[id];$('pWhy').textContent=ALERTS[id]||'';
+    $('pGo').hidden=!P.href;$('pSoon').hidden=!!P.href;
+    if(P.href){$('pGo').href=P.href;$('pGo').textContent=P.go}
+    panel.hidden=false;
+    if(!reduce.matches)panel.firstElementChild.animate([{opacity:0,transform:'translateY(10px) scale(.96)'},{opacity:1,transform:'none'}],{duration:240,easing:'cubic-bezier(.16,1,.3,1)'});
+    panel.animate([{opacity:0},{opacity:1}],{duration:reduce.matches?1:180,easing:'linear'});
+    $('pClose').focus();
+  }
+  function close(){
+    if(panel.hidden)return;
+    var a=panel.animate([{opacity:1},{opacity:0}],{duration:reduce.matches?1:150,easing:'cubic-bezier(.4,0,1,1)'});
+    a.finished.then(function(){panel.hidden=true;if(last&&last.focus)last.focus()});
+  }
+
+  // drag the map with the mouse (touch scrolls natively); a drag is not a click
+  var drag=null,moved=false;
+  map.addEventListener('pointerdown',function(e){if(e.pointerType!=='mouse'||e.button!==0)return;drag={x:e.clientX,y:e.clientY,l:map.scrollLeft,t:map.scrollTop};moved=false});
+  addEventListener('pointermove',function(e){
+    if(!drag)return;var dx=e.clientX-drag.x,dy=e.clientY-drag.y;
+    if(!moved&&Math.abs(dx)+Math.abs(dy)>6){moved=true;map.classList.add('drag')}
+    if(moved){map.scrollLeft=drag.l-dx;map.scrollTop=drag.t-dy}
+  });
+  addEventListener('pointerup',function(){drag=null;map.classList.remove('drag')});
+  world.addEventListener('click',function(e){
+    if(moved){moved=false;e.preventDefault();return}
+    var t=e.target.closest('[data-id]');if(t)open(t.getAttribute('data-id'));
+  },true);
+  world.addEventListener('keydown',function(e){var t=e.target.closest('.spot');if(t&&(e.key==='Enter'||e.key===' ')){e.preventDefault();open(t.getAttribute('data-id'))}});
+  world.addEventListener('pointerover',function(e){var t=e.target.closest('[data-id]');if(t)light(t.getAttribute('data-id'),true)});
+  world.addEventListener('pointerout',function(e){var t=e.target.closest('[data-id]');if(t)light(t.getAttribute('data-id'),false)});
+  $('pClose').addEventListener('click',close);
+  panel.addEventListener('click',function(e){if(e.target===panel)close()});
+  addEventListener('keydown',function(e){if(e.key==='Escape')close()});
+  var rt=0;addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(build,120)});
+
+  // from the gate into the realm, and back out with Log out
+  window.enterRealm=function(){
+    var a=window.realmAcct;addr.hidden=!a;
+    if(a){addr.querySelector('.l').textContent=a.slice(0,6)+'\u2026'+a.slice(-4);addr.querySelector('.s').textContent=a.slice(0,4)+'\u2026'+a.slice(-2);addr.title=a}
+    realm.removeAttribute('aria-hidden');
+    scene.animate([{opacity:1},{opacity:0}],{duration:reduce.matches?1:260,easing:'cubic-bezier(.4,0,1,1)',fill:'forwards'}).finished.then(function(){scene.style.display='none'});
+  };
+  $('logout').addEventListener('click',function(){
+    window.realmAcct=null;close();realm.setAttribute('aria-hidden','true');
+    scene.getAnimations().forEach(function(a){a.cancel()});scene.style.display='';
+    if(window.gateReset)gateReset();
+  });
+  build();
+})();
+</script>
+</body>
+</html>
