@@ -120,7 +120,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
 /* the parchment that opens for each place */
 .panel{position:absolute;inset:0;z-index:4;display:grid;place-items:center;padding:16px;background:rgba(8,10,30,.55)}
 .panel[hidden]{display:none}
-.parch{position:relative;width:min(420px,100%);padding:30px 28px 26px;background:#f6ead0;border:3px solid var(--ink);box-shadow:0 10px 0 var(--ink);text-align:center;color:var(--ink)}
+.parch{position:relative;width:min(420px,100%);padding:30px 28px 26px;background:#efdcb3 url(/realm/assets/paper.webp) center/1024px;border:3px solid var(--ink);box-shadow:0 10px 0 var(--ink),inset 0 0 60px rgba(122,78,28,.32),inset 0 0 12px rgba(122,78,28,.36);text-align:center;color:var(--ink)}
 .parch::before{content:"";position:absolute;inset:9px;border:2px solid #c98c1d;pointer-events:none}
 .parch h2{margin:0;font-family:var(--gothic);font-weight:900;font-size:40px;line-height:1;color:#1d3778}
 .parch p{margin:12px 0 0;font-size:19px;line-height:1.4}
@@ -132,23 +132,22 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
 .go:hover{transform:translateY(-2px)}
 .go:focus-visible{outline:3px solid #1d3778;outline-offset:4px}
 .go[hidden],.soon[hidden],.why[hidden]{display:none}
-/* the modal of a place whose panes live in the game (Blacksmith, Market, Castle): the pane in a frame, a tab per door */
-.box{position:absolute;inset:0;z-index:5;display:grid;place-items:center;padding:16px;background:rgba(8,10,30,.6)}
+/* Blacksmith and Market: the game page draws their modal (justa-web src/modal) in a frame over the whole village, with no
+   background of its own; until the frame says it is ready the village dims and shows a loader */
+.box{position:absolute;inset:0;z-index:5;background:rgba(8,10,30,.55)}
 .box[hidden]{display:none}
-.boxin{position:relative;display:flex;flex-direction:column;width:min(1040px,100%);height:min(780px,100%);padding:14px;box-sizing:border-box;background:#f6ead0;border:3px solid var(--ink);box-shadow:0 10px 0 var(--ink);color:var(--ink)}
-.boxin::before{content:"";position:absolute;inset:7px;border:2px solid #c98c1d;pointer-events:none}
-.bh{position:relative;display:flex;align-items:center;flex-wrap:wrap;gap:10px 16px;padding:2px 46px 12px 6px}
-.bh h2{margin:0;font-family:var(--gothic);font-weight:900;font-size:34px;line-height:1;color:#1d3778}
-.btabs{display:flex;flex-wrap:wrap;gap:8px 10px}
-.btabs .go{margin:0;padding:7px 14px;font-size:16px;border:0;cursor:pointer}
-.btabs .go.tab[aria-selected="true"]{color:#ffe08a;background:linear-gradient(#1d3778,#132a62);box-shadow:0 0 0 2px #0a1636,0 3px 0 2px #0a1636}
-.boxin .x{position:absolute;right:8px;top:6px;z-index:1;width:40px;height:40px;border:0;background:none;font-family:var(--geo);font-size:30px;line-height:1;color:var(--ink);cursor:pointer}
-.boxin .x:focus-visible{outline:3px solid #1d3778}
-.bbody{position:relative;flex:1;min-height:0;border:3px solid var(--ink);border-radius:6px;overflow:hidden;background:#132a62}
-.bbody iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-.bload{position:absolute;inset:0;z-index:1;display:grid;place-items:center;margin:0;font-family:var(--gothic);font-weight:700;font-size:24px;color:#ffe08a;background:#132a62}
+/* the frame keeps to the screen's safe area (a notch, the home bar: viewport-fit=cover, and a frame gets no insets of
+   its own); the box's dim covers the rest, and the frame draws no dim of its own */
+.box iframe{position:absolute;top:env(safe-area-inset-top,0px);left:env(safe-area-inset-left,0px);width:calc(100% - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px));height:calc(100% - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));border:0;background:none;opacity:0}
+.box.ready iframe{opacity:1}
+.bload{position:absolute;inset:0;display:grid;place-items:center;padding:16px}
 .bload[hidden]{display:none}
-@media (max-width:600px){.box{padding:6px}.boxin{padding:10px}.bh{padding:0 44px 10px 4px}.bh h2{font-size:26px}.btabs .go{padding:6px 11px;font-size:14px}}
+.bcard{position:relative;display:flex;align-items:center;gap:14px;padding:18px 60px 18px 24px;background:#efdcb3 url(/realm/assets/paper.webp) center/1024px;border:3px solid var(--ink);box-shadow:0 8px 0 var(--ink),inset 0 0 36px rgba(122,78,28,.32);font-family:var(--gothic);font-weight:900;font-size:28px;line-height:1;color:#1d3778}
+.bcard .x{position:absolute;right:8px;top:50%;margin-top:-20px;width:40px;height:40px;border:0;background:none;font-family:var(--geo);font-size:30px;line-height:1;color:var(--ink);cursor:pointer}
+.bcard .x:focus-visible{outline:3px solid #1d3778}
+.spin{flex:none;width:28px;height:28px;border-radius:50%;border:4px solid rgba(43,26,13,.22);border-top-color:var(--ink);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation-duration:2.4s}}
 .gos{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 12px;margin-top:20px}.gos:empty{display:none}.gos .go{margin-top:0}
 @media (max-width:620px){
   :root{--hb:58px}
@@ -190,11 +189,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
     </div>
   </div>
   <div class="box" id="box" hidden>
-    <div class="boxin" role="dialog" aria-modal="true" aria-labelledby="bName">
-      <button class="x" id="bClose" type="button" aria-label="Close">&times;</button>
-      <div class="bh"><h2 id="bName"></h2><div class="btabs" id="bTabs" role="tablist"></div></div>
-      <div class="bbody" id="bBody"><p class="bload" id="bLoad">Opening&hellip;</p></div>
-    </div>
+    <div class="bload" id="bLoad"><div class="bcard" role="status"><span class="spin" aria-hidden="true"></span><span id="bName"></span><button class="x" id="bClose" type="button" aria-label="Close">&times;</button></div></div>
   </div>
 </div>
 <div class="scene" id="scene">
@@ -316,15 +311,16 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   var $=function(id){return document.getElementById(id)};
   var realm=$('realm'),scene=$('scene'),map=$('map'),world=$('world'),panel=$('panel'),addr=$('addr');
   var reduce=matchMedia('(prefers-reduced-motion: reduce)');
-  var box=$('box'),bTabs=$('bTabs'),bBody=$('bBody'),bLoad=$('bLoad'),bFrame=null,ready=false,boxLast=null,drop=0;
-  var MODAL_DOOR=/[?&]door=(armory|forge|market|season|ranked)(?:&|$)/;
+  var box=$('box'),bLoad=$('bLoad'),bFrame=null,ready=false,want=null,boxLast=null,drop=0,closing=false,fade=null;
+  // the places whose modal the game page draws (justa-web src/modal/modal.js), and the tab each opens on
+  var MODAL_PLACE={smith:'armory',market:'market'};
   // what each place opens; Joust, Races and Castle work today, the others open with the Ronin version
   var PLACES={
     stable:{tag:'Stable',name:'The Stable',text:'Feed, brush and kiss your horse. A well-kept horse hits harder.'},
     lists:{tag:'Joust',name:'The Lists',text:'',links:[['Joust','/realm/play/?door=bet']]},
     tavern:{tag:'Tavern',name:'The Tavern',text:'Quests for the knights of the realm.'},
-    smith:{tag:'Blacksmith',name:'The Blacksmith',text:'Your armor sets, the mint and the forge.',links:[['Armory','/realm/play/?door=armory'],['Forge','/realm/play/?door=forge']]},
-    market:{tag:'Market',name:'The Market',text:'Buy and sell the armor sets of the season, and get the season pass.',links:[['Market','/realm/play/?door=market'],['Season pass','/realm/play/?door=season'],['Buy $HORSKE','https://app.roninchain.com/swap?outputCurrency=0xc0Ca45c2e9448D3876Ca86220B2418C719298396',1]]},
+    smith:{tag:'Blacksmith',name:'The Blacksmith'},   // Armory and Forge, in the game page's modal
+    market:{tag:'Market',name:'The Market'},          // Market, Season pass and Buy $HORSKE, in the game page's modal
     track:{tag:'Races',name:'HORSKingdom Racing',text:'Six Ronkes. One winner.',links:[['Play at Ronke Casino','https://games.ronkeverse.com/horske',1]]},
     castle:{tag:'Castle',name:'The Castle',text:'Swap for HORSKE, the coin of the realm, on Ronin.',links:[['Swap $HORSKE','https://app.roninchain.com/swap?outputCurrency=0xc0Ca45c2e9448D3876Ca86220B2418C719298396',1]]},
   };
@@ -393,7 +389,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   function light(id,on){world.querySelectorAll('[data-id="'+id+'"]').forEach(function(e){e.classList.toggle('on',on)})}
   function open(id){
     var P=PLACES[id];
-    if((P.links||[]).some(function(L){return MODAL_DOOR.test(L[1])}))return openBox(id);
+    if(MODAL_PLACE[id])return openBox(id);
     last=document.activeElement;
     $('pName').textContent=P.name;$('pText').textContent=P.text||'';$('pText').hidden=!P.text;
     $('pWhy').hidden=!ALERTS[id];$('pWhy').textContent=ALERTS[id]||'';
@@ -410,48 +406,45 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
     a.finished.then(function(){panel.hidden=true;if(last&&last.focus)last.focus()});
   }
 
-  // Blacksmith, Market, Castle: their panes of the game open in a modal over the village (Rafael, 16/10: "tudo do
-  // kingdom sejam modais tirando a parte da justa"); a bout is the lists' part, and the pane sends the window there.
-  // One frame, kept while the modal is open; it goes 1.5 s after the modal closes (a purchase's save finishes first)
-  // and at once when the page is left, so a page restored from the back/forward cache never holds an old season
-  function doorOf(href){var m=/[?&]door=([a-z]+)/.exec(href);return m?m[1]:null}
+  // Blacksmith and Market: their modal is drawn by the game page (justa-web src/modal/modal.js) in a frame over the whole
+  // village (Rafael, 16/10: "tudo do kingdom sejam modais tirando a parte da justa", "arruma todos modais"). The frame
+  // has no background, so the live village shows around the panel; it says when it is ready and when it closes, and a
+  // bout (the lists' part) sends the whole window to the game. One frame, kept while the modal is open; it goes 1.5 s
+  // after the modal closes (a purchase's save finishes first) and at once when the page is left, so a page restored
+  // from the back/forward cache never holds an old season
+  function door(){bFrame.contentWindow.postMessage({type:'justa-door',door:MODAL_PLACE[want],place:want},location.origin)}
+  function shown(){bLoad.hidden=true;box.classList.add('ready');bFrame.focus()}
   function openBox(id){
-    var P=PLACES[id];boxLast=document.activeElement;clearTimeout(drop);
-    $('bName').textContent=P.name;bTabs.textContent='';
-    var first=null;
-    (P.links||[]).forEach(function(L){
-      if(MODAL_DOOR.test(L[1])){var b=document.createElement('button');b.type='button';b.className='go tab';b.textContent=L[0];b.setAttribute('role','tab');b.dataset.href=L[1];b.addEventListener('click',function(){pick(b)});bTabs.appendChild(b);if(!first)first=b}
-      else{var a=document.createElement('a');a.className='go';a.href=L[1];a.textContent=L[0];if(L[2]){a.target='_blank';a.rel='noopener'}bTabs.appendChild(a)}
-    });
+    var P=PLACES[id];if(!box.contains(document.activeElement))boxLast=document.activeElement;clearTimeout(drop);want=id;
+    if(fade){fade.cancel();fade=null}closing=false;   // a reopen during the closing fade keeps the box
+    $('bName').textContent='Opening '+P.name.replace(/^The /,'the ')+'\u2026';
     box.hidden=false;
-    if(!reduce.matches)box.firstElementChild.animate([{opacity:0,transform:'translateY(10px) scale(.97)'},{opacity:1,transform:'none'}],{duration:240,easing:'cubic-bezier(.16,1,.3,1)'});
     box.animate([{opacity:0},{opacity:1}],{duration:reduce.matches?1:180,easing:'linear'});
-    if(first)pick(first);
+    if(bFrame&&ready){door();shown();return}
+    box.classList.remove('ready');bLoad.hidden=false;
+    if(!bFrame){bFrame=document.createElement('iframe');bFrame.title=P.name;box.insertBefore(bFrame,bLoad);ready=false;bFrame.src='/realm/play/?modal=1&building='+id+'&door='+MODAL_PLACE[id]}
+    if(!reduce.matches)bLoad.firstElementChild.animate([{opacity:0,transform:'scale(.96)'},{opacity:1,transform:'none'}],{duration:220,easing:'cubic-bezier(.16,1,.3,1)'});
     $('bClose').focus();
   }
-  function pick(b){
-    bTabs.querySelectorAll('.tab').forEach(function(t){t.setAttribute('aria-selected',t===b?'true':'false')});
-    var href=b.dataset.href;
-    if(bFrame&&ready){bFrame.contentWindow.postMessage({type:'justa-door',door:doorOf(href)},location.origin);return}
-    if(!bFrame){bFrame=document.createElement('iframe');bFrame.title=$('bName').textContent;bBody.appendChild(bFrame)}
-    ready=false;bLoad.hidden=false;bFrame.src=href+(href.indexOf('?')<0?'?':'&')+'modal=1';
-  }
   function dropFrame(){if(bFrame){bFrame.remove();bFrame=null;ready=false}}
-  function closeBox(now){
-    if(box.hidden)return;
-    var done=function(){box.hidden=true;drop=setTimeout(dropFrame,now?0:1500);if(boxLast&&boxLast.focus)boxLast.focus()};
+  function closeBox(now){   // once per opening: a second close during the fade (a double tap on ×) is the same close
+    if(box.hidden||(closing&&!now))return;
+    closing=true;
+    var done=function(){if(!closing)return;closing=false;fade=null;box.hidden=true;clearTimeout(drop);drop=setTimeout(dropFrame,now?0:1500);if(boxLast&&boxLast.focus)boxLast.focus()};
+    if(fade){fade.cancel();fade=null}
     if(now||reduce.matches){done();return}
-    box.animate([{opacity:1},{opacity:0}],{duration:150,easing:'cubic-bezier(.4,0,1,1)'}).finished.then(done);
+    fade=box.animate([{opacity:1},{opacity:0}],{duration:150,easing:'cubic-bezier(.4,0,1,1)'});
+    fade.finished.then(done,function(){});
   }
   window.closeBox=closeBox;
   addEventListener('message',function(e){
     if(e.origin!==location.origin||!bFrame||e.source!==bFrame.contentWindow||!e.data)return;
-    if(e.data.type==='justa-ready'){ready=true;bLoad.hidden=true}
+    if(e.data.type==='justa-ready'){ready=true;bFrame.title=PLACES[want].name;door();if(!box.hidden)shown()}
     if(e.data.type==='justa-close')closeBox();
   });
   $('bClose').addEventListener('click',function(){closeBox()});
-  box.addEventListener('click',function(e){if(e.target===box)closeBox()});
-  addEventListener('pagehide',function(){box.hidden=true;clearTimeout(drop);dropFrame()});
+  box.addEventListener('click',function(e){if(e.target===box||e.target===bLoad)closeBox()});   // outside the card, or the safe-area strips
+  addEventListener('pagehide',function(){if(fade){fade.cancel();fade=null}closing=false;box.hidden=true;clearTimeout(drop);dropFrame()});
 
   // phones: drag the map with the mouse (touch scrolls natively); a drag is not a click
   var drag=null,moved=false;
