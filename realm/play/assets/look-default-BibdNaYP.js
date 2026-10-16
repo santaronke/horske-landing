@@ -1,0 +1,1 @@
+const e=(o,r={})=>({op:"grade",input:o,opts:r});function a(o){o.param("bloomStrength",.15),o.param("bloomRadius",.6),o.param("bloomThreshold",1);let r=o.scene;return r=e(r,{exposure:1.06,saturation:1,contrast:1.02,temperature:-.02}),r}export{a as look};

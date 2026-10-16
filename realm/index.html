@@ -130,6 +130,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
 .go:hover{transform:translateY(-2px)}
 .go:focus-visible{outline:3px solid #1d3778;outline-offset:4px}
 .go[hidden],.soon[hidden],.why[hidden]{display:none}
+.gos{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 12px;margin-top:20px}.gos:empty{display:none}.gos .go{margin-top:0}
 @media (max-width:620px){
   :root{--hb:58px}
   .top .in{padding-inline:16px;gap:10px}
@@ -165,7 +166,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
       <h2 id="pName"></h2>
       <p id="pText"></p>
       <p class="why" id="pWhy" hidden></p>
-      <a class="go" id="pGo" target="_blank" rel="noopener" hidden></a>
+      <div class="gos" id="pGos"></div>
       <p class="soon" id="pSoon" hidden>Opens soon.</p>
     </div>
   </div>
@@ -290,12 +291,12 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   // what each place opens; Joust, Races and Castle work today, the others open with the Ronin version
   var PLACES={
     stable:{tag:'Stable',name:'The Stable',text:'Feed, brush and kiss your horse. A well-kept horse hits harder.'},
-    lists:{tag:'Joust',name:'The Lists',text:'Joust other Ronkes: ten fights a day, and ranked never closes.',go:'Joust now',href:'https://www.spawn.co/@kazuo/justa-dos-ronkes'},
-    tavern:{tag:'Tavern',name:'The Tavern',text:'Bet on a joust. The third pass decides.'},
-    smith:{tag:'Blacksmith',name:'The Blacksmith',text:'Forge the armor sets of the season.'},
-    market:{tag:'Market',name:'The Market',text:'Feed, brushes, medicine and the season pass.'},
-    track:{tag:'Races',name:'Horske Racing',text:'Six Ronkes. One winner.',go:'Play at Ronke Casino',href:'https://games.ronkeverse.com/horske'},
-    castle:{tag:'Castle',name:'The Castle',text:'The $HORSKE treasury and the ranked prize pot.',go:'Buy $HORSKE',href:'https://app.roninchain.com/swap?outputCurrency=0xc0Ca45c2e9448D3876Ca86220B2418C719298396'}
+    lists:{tag:'Joust',name:'The Lists',text:'Joust the rivals of the season, or another knight in ranked.',links:[['Joust','/realm/play/?door=rivals'],['Ranked','/realm/play/?door=ranked']]},
+    tavern:{tag:'Tavern',name:'The Tavern',text:'Bet on a joust against the house. The third pass decides.',links:[['GAMBA','/realm/play/?door=gamba']]},
+    smith:{tag:'Blacksmith',name:'The Blacksmith',text:'Your armor sets, the mint and the forge.',links:[['Armory','/realm/play/?door=armory'],['Forge','/realm/play/?door=forge']]},
+    market:{tag:'Market',name:'The Market',text:'Buy and sell the armor sets of the season, and get the season pass.',links:[['Market','/realm/play/?door=market'],['Season pass','/realm/play/?door=season'],['Buy $HORSKE','https://app.roninchain.com/swap?outputCurrency=0xc0Ca45c2e9448D3876Ca86220B2418C719298396',1]]},
+    track:{tag:'Races',name:'Horske Racing',text:'Six Ronkes. One winner.',links:[['Play at Ronke Casino','https://games.ronkeverse.com/horske',1]]},
+    castle:{tag:'Castle',name:'The Castle',text:'The leaderboards of the season: ranked Elo and GAMBA.',links:[['Ranked board','/realm/play/?door=ranked'],['GAMBA board','/realm/play/?door=gamba&sub=lb']]}
   };
   // demo alerts until the game sends real ones
   var ALERTS={stable:'Your horse is waiting for its kiss.',tavern:'A GAMBA is open.'};
@@ -343,8 +344,8 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
     var P=PLACES[id];last=document.activeElement;
     $('pName').textContent=P.name;$('pText').textContent=P.text;
     $('pWhy').hidden=!ALERTS[id];$('pWhy').textContent=ALERTS[id]||'';
-    $('pGo').hidden=!P.href;$('pSoon').hidden=!!P.href;
-    if(P.href){$('pGo').href=P.href;$('pGo').textContent=P.go}
+    var links=P.links||[],box=$('pGos');box.textContent='';$('pSoon').hidden=links.length>0;
+    links.forEach(function(L){var a=document.createElement('a');a.className='go';a.href=L[1];a.textContent=L[0];if(L[2]){a.target='_blank';a.rel='noopener'}box.appendChild(a)});
     panel.hidden=false;
     if(!reduce.matches)panel.firstElementChild.animate([{opacity:0,transform:'translateY(10px) scale(.96)'},{opacity:1,transform:'none'}],{duration:240,easing:'cubic-bezier(.16,1,.3,1)'});
     panel.animate([{opacity:0},{opacity:1}],{duration:reduce.matches?1:180,easing:'linear'});
@@ -390,6 +391,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
     if(window.gateReset)gateReset();
   });
   build();
+  if(new URLSearchParams(location.search).has('back')){scene.style.display='none';realm.removeAttribute('aria-hidden');realm.style.visibility='visible'}
 })();
 </script>
 </body>
