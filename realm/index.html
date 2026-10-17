@@ -127,7 +127,11 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
 .parch .why{margin-top:10px;font-style:italic;color:#8e1a1f}
 .parch .soon{margin-top:18px;font-style:italic;color:#5a4630}
 .parch .x{position:absolute;right:8px;top:6px;z-index:1;width:40px;height:40px;border:0;background:none;font-family:var(--geo);font-size:30px;line-height:1;color:var(--ink);cursor:pointer}
-.parch .x:focus-visible{outline:3px solid #1d3778}
+/* no square ring around the × (Rafael, 17/10: "odeio esse quadrado que fica"): the card takes the focus when it opens,
+   and a key user tabbing to the × sees a soft round mark */
+.parch:focus,.bcard:focus,.parch .x:focus,.bcard .x:focus{outline:none}
+.parch .x,.bcard .x{border-radius:50%}
+.parch .x:focus-visible{background:rgba(43,26,13,.14)}
 .go{position:relative;display:inline-flex;align-items:center;margin-top:20px;padding:10px 20px;border-radius:10px;text-decoration:none;font-family:var(--geo);font-weight:700;font-size:18px;color:#2b1a0d;background:linear-gradient(#ffd85a,#e0a91f);box-shadow:0 0 0 2px #0a1636,0 5px 0 2px #0a1636,inset 0 3px 0 rgba(255,255,255,.5);transition:transform .12s}
 .go:hover{transform:translateY(-2px)}
 .go:focus-visible{outline:3px solid #1d3778;outline-offset:4px}
@@ -144,7 +148,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
 .bload[hidden]{display:none}
 .bcard{position:relative;display:flex;align-items:center;gap:14px;padding:18px 60px 18px 24px;background:#efdcb3 url(/realm/assets/paper.webp) center/1024px;border:3px solid var(--ink);box-shadow:0 8px 0 var(--ink),inset 0 0 36px rgba(122,78,28,.32);font-family:var(--gothic);font-weight:900;font-size:28px;line-height:1;color:#1d3778}
 .bcard .x{position:absolute;right:8px;top:50%;margin-top:-20px;width:40px;height:40px;border:0;background:none;font-family:var(--geo);font-size:30px;line-height:1;color:var(--ink);cursor:pointer}
-.bcard .x:focus-visible{outline:3px solid #1d3778}
+.bcard .x:focus-visible{background:rgba(43,26,13,.14)}
 .spin{flex:none;width:28px;height:28px;border-radius:50%;border:4px solid rgba(43,26,13,.22);border-top-color:var(--ink);animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){.spin{animation-duration:2.4s}}
@@ -185,7 +189,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   </header>
   <div class="map" id="map"><div class="world" id="world"></div></div>
   <div class="panel" id="panel" hidden>
-    <div class="parch" role="dialog" aria-modal="true" aria-labelledby="pName">
+    <div class="parch" id="pCard" role="dialog" aria-modal="true" aria-labelledby="pName" tabindex="-1">
       <button class="x" id="pClose" type="button" aria-label="Close">&times;</button>
       <h2 id="pName"></h2>
       <p id="pText"></p>
@@ -195,7 +199,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
     </div>
   </div>
   <div class="box" id="box" hidden>
-    <div class="bload" id="bLoad"><div class="bcard" role="status"><span class="spin" aria-hidden="true"></span><span id="bName"></span><button class="x" id="bClose" type="button" aria-label="Close">&times;</button></div></div>
+    <div class="bload" id="bLoad"><div class="bcard" id="bCard" role="status" tabindex="-1"><span class="spin" aria-hidden="true"></span><span id="bName"></span><button class="x" id="bClose" type="button" aria-label="Close">&times;</button></div></div>
   </div>
 </div>
 <div class="scene" id="scene">
@@ -416,7 +420,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
     panel.hidden=false;
     if(!reduce.matches)panel.firstElementChild.animate([{opacity:0,transform:'translateY(10px) scale(.96)'},{opacity:1,transform:'none'}],{duration:240,easing:'cubic-bezier(.16,1,.3,1)'});
     panel.animate([{opacity:0},{opacity:1}],{duration:reduce.matches?1:180,easing:'linear'});
-    $('pClose').focus();
+    $('pCard').focus({preventScroll:true});
   }
   function close(){
     if(panel.hidden)return;
@@ -442,7 +446,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
     box.classList.remove('ready');bLoad.hidden=false;
     if(!bFrame){bFrame=document.createElement('iframe');bFrame.title=P.name;box.insertBefore(bFrame,bLoad);ready=false;bFrame.src='/realm/play/?modal=1&building='+id+'&door='+MODAL_PLACE[id]}
     if(!reduce.matches)bLoad.firstElementChild.animate([{opacity:0,transform:'scale(.96)'},{opacity:1,transform:'none'}],{duration:220,easing:'cubic-bezier(.16,1,.3,1)'});
-    $('bClose').focus();
+    $('bCard').focus({preventScroll:true});
   }
   function dropFrame(){if(bFrame){bFrame.remove();bFrame=null;ready=false}}
   function closeBox(now){   // once per opening: a second close during the fade (a double tap on ×) is the same close
