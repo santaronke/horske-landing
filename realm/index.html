@@ -319,7 +319,9 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   var reduce=matchMedia('(prefers-reduced-motion: reduce)');
   var box=$('box'),bLoad=$('bLoad'),bFrame=null,ready=false,want=null,boxLast=null,drop=0,closing=false,fade=null;
   // the places whose modal the game page draws (justa-web src/modal/modal.js), and the tab each opens on
-  var MODAL_PLACE={smith:'armory',market:'ronin'};   // the Market opens on the Ronin Market's live listings (17/10)
+  // the Market opens on the Ronin Market's live listings (17/10); the Tavern on its quests (Rafael, 17/10: "E fazer as
+  // quests que vão ficar na taverna")
+  var MODAL_PLACE={smith:'armory',market:'ronin',tavern:'quests'};
   // what each place opens; Joust, Races and Castle work today, the others open with the Ronin version
   var PLACES={
     stable:{tag:'Stable',name:'The Stable',text:'Feed, brush and kiss your horse. A well-kept horse hits harder.'},
@@ -327,7 +329,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
     // house, the GAMBA; PvE grey, to come; Ranked PvP: "ranked vai ser soon tambem"). A link's 4th slot 'soon' draws it
     // grey and dead
     lists:{tag:'Joust',name:'Joust Arena',text:'Choose your mode.',modes:1,links:[['Fight the house','/realm/play/?door=bet'],['PvE','',0,'soon'],['Ranked PvP','',0,'soon']]},
-    tavern:{tag:'Tavern',name:'The Tavern',text:'Quests for the knights of the realm.'},
+    tavern:{tag:'Tavern',name:'The Tavern'},          // the quests, in the game page's modal
     smith:{tag:'Blacksmith',name:'The Blacksmith'},   // Armory and Forge, in the game page's modal
     market:{tag:'Market',name:'The Market'},          // Ronin Market, Armor market, Season pass and Buy $HORSKE, in the game page's modal
     track:{tag:'Races',name:'HORSKingdom Racing',text:'Six Ronkes. One winner.',links:[['Play at Ronke Casino','https://games.ronkeverse.com/horske',1]]},
