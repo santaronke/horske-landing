@@ -1,4 +1,4 @@
-import{S as R,I,z as L,q as s,w as P,J as N}from"./index-BBlDpett.js";const W=`/* The Lists' betting panel and result card (src/bet/bet.js) as a wooden board in the style of the site's header bar\r
+import{S as R,I,z as L,q as s,w as P,J as N}from"./index-Cd4h57NY.js";const W=`/* The Lists' betting panel and result card (src/bet/bet.js) as a wooden board in the style of the site's header bar\r
    (horske-realm assets bar-l/bar-mid/bar-r: dark wood, a gold bevel at the edge): Rafael, 17/10, on the menu "queria\r
    que o menus fosse algo de madeira dentro da justa", showing the header, "talvez algo nesse estilo?". The wood is the\r
    header's own (art/ui/wood-dark.webp: its band between the gold edges, mirrored below so it repeats with no seam),\r
