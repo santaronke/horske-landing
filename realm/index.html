@@ -317,7 +317,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   // what each place opens; Joust, Races and Castle work today, the others open with the Ronin version
   var PLACES={
     stable:{tag:'Stable',name:'The Stable',text:'Feed, brush and kiss your horse. A well-kept horse hits harder.'},
-    lists:{tag:'Joust',name:'The Lists',text:'',links:[['Joust','/realm/play/?door=bet']]},
+    lists:{tag:'Joust',name:'The Lists',go:'/realm/play/?door=bet'},   // straight into the betting panel (Rafael, 17/10: "deveria só abrir o jogo ao clicar, direto no gamba")
     tavern:{tag:'Tavern',name:'The Tavern',text:'Quests for the knights of the realm.'},
     smith:{tag:'Blacksmith',name:'The Blacksmith'},   // Armory and Forge, in the game page's modal
     market:{tag:'Market',name:'The Market'},          // Market, Season pass and Buy $HORSKE, in the game page's modal
@@ -389,6 +389,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   function light(id,on){world.querySelectorAll('[data-id="'+id+'"]').forEach(function(e){e.classList.toggle('on',on)})}
   function open(id){
     var P=PLACES[id];
+    if(P.go){location.assign(P.go);return}
     if(MODAL_PLACE[id])return openBox(id);
     last=document.activeElement;
     $('pName').textContent=P.name;$('pText').textContent=P.text||'';$('pText').hidden=!P.text;
