@@ -320,8 +320,8 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   var box=$('box'),bLoad=$('bLoad'),bFrame=null,ready=false,want=null,boxLast=null,drop=0,closing=false,fade=null;
   // the places whose modal the game page draws (justa-web src/modal/modal.js), and the tab each opens on
   // the Market opens on the Ronin Market's live listings (17/10); the Tavern on its quests (Rafael, 17/10: "E fazer as
-  // quests que vão ficar na taverna")
-  var MODAL_PLACE={smith:'armory',market:'ronin',tavern:'quests'};
+  // quests que vão ficar na taverna"); the Blacksmith waits ("blacksmith vai pra soon também"): its card, below
+  var MODAL_PLACE={market:'ronin',tavern:'quests'};
   // what each place opens; Joust, Races and Castle work today, the others open with the Ronin version
   var PLACES={
     stable:{tag:'Stable',name:'The Stable',text:'Feed, brush and kiss your horse. A well-kept horse hits harder.'},
@@ -330,7 +330,8 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
     // grey and dead
     lists:{tag:'Joust',name:'Joust Arena',text:'Choose your mode.',modes:1,links:[['Fight the house','/realm/play/?door=bet'],['PvE','',0,'soon'],['Ranked PvP','',0,'soon']]},
     tavern:{tag:'Tavern',name:'The Tavern'},          // the quests, in the game page's modal
-    smith:{tag:'Blacksmith',name:'The Blacksmith'},   // Armory and Forge, in the game page's modal
+    // the Blacksmith waits (Rafael, 17/10: "blacksmith vai pra soon também"): Armory and Forge grey, like PvE and Ranked
+    smith:{tag:'Blacksmith',name:'The Blacksmith',text:'Your armor sets and the forge.',modes:1,links:[['Armory','',0,'soon'],['Forge','',0,'soon']]},
     market:{tag:'Market',name:'The Market'},          // Ronin Market and Buy $HORSKE, in the game page's modal (Armor market and Season pass: soon, 17/10)
     track:{tag:'Races',name:'HORSKingdom Racing',text:'Six Ronkes. One winner.',links:[['Play at Ronke Casino','https://games.ronkeverse.com/horske',1]]},
     castle:{tag:'Castle',name:'The Castle',text:'Swap for HORSKE, the coin of the realm, on Ronin.',links:[['Swap $HORSKE','https://app.roninchain.com/swap?outputCurrency=0xc0Ca45c2e9448D3876Ca86220B2418C719298396',1]]},
