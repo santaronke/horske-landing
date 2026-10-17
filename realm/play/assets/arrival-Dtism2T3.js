@@ -1,1 +1,0 @@
-import{snapshot as o}from"./bank-Dv-L2KKj.js";import{e as a}from"./index-DPmY3ywN.js";async function s(n,t){if(a(n))try{t.state.econ=await o(n,t.displayName||"Knight")}catch(e){t.state.econErr={msg:String(e&&e.message||e).slice(0,200),at:n.now()}}}function c(n,t){}export{s as onArrive,c as onLeave};
