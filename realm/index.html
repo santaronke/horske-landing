@@ -132,7 +132,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
 .go:hover{transform:translateY(-2px)}
 .go:focus-visible{outline:3px solid #1d3778;outline-offset:4px}
 .go[hidden],.soon[hidden],.why[hidden]{display:none}
-/* Blacksmith and Market: the game page draws their modal (justa-web src/modal) in a frame over the whole village, with no
+/* Tavern and Market: the game page draws their modal (justa-web src/modal) in a frame over the whole village, with no
    background of its own; until the frame says it is ready the village dims and shows a loader */
 .box{position:absolute;inset:0;z-index:5;background:rgba(8,10,30,.55)}
 .box[hidden]{display:none}
@@ -322,7 +322,8 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   // the Market opens on the Ronin Market's live listings (17/10); the Tavern on its quests (Rafael, 17/10: "E fazer as
   // quests que vão ficar na taverna"); the Blacksmith waits ("blacksmith vai pra soon também"): its card, below
   var MODAL_PLACE={market:'ronin',tavern:'quests'};
-  // what each place opens; Joust, Races and Castle work today, the others open with the Ronin version
+  // what each place opens: the Joust Arena's card, the Tavern's and the Market's modals, the Races and the Castle's links;
+  // the Stable and the Blacksmith wait (Soon)
   var PLACES={
     stable:{tag:'Stable',name:'The Stable',text:'Feed, brush and kiss your horse. A well-kept horse hits harder.'},
     // the joust's card (Santa via Rafael, 17/10: "a volta do cartão antes de entrar na justa", three buttons: Fight the
@@ -405,11 +406,12 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
     if(MODAL_PLACE[id])return openBox(id);
     last=document.activeElement;
     $('pName').textContent=P.name;$('pText').textContent=P.text||'';$('pText').hidden=!P.text;
-    $('pWhy').hidden=!ALERTS[id]||!!P.modes;   // the joust's card says no "A GAMBA is open." (Rafael, 17/10: "tira esse a gamba is open"); its plaque keeps the alert$('pWhy').textContent=ALERTS[id]||'';
+    // the joust's card says no "A GAMBA is open." (Rafael, 17/10: "tira esse a gamba is open"); its plaque keeps the alert
+    $('pWhy').hidden=!ALERTS[id]||!!P.modes;$('pWhy').textContent=ALERTS[id]||'';
     var links=P.links||[],box=$('pGos');box.textContent='';$('pSoon').hidden=links.length>0;
     box.classList.toggle('modes',!!P.modes);
     links.forEach(function(L){
-      if(L[3]==='soon'){var o=document.createElement('span');o.className='go off';o.setAttribute('aria-disabled','true');o.textContent=L[0];var m=document.createElement('small');m.textContent='Soon';o.appendChild(m);box.appendChild(o);return}
+      if(L[3]==='soon'){var o=document.createElement('span');o.className='go off';o.setAttribute('role','button');o.setAttribute('aria-disabled','true');o.textContent=L[0];var m=document.createElement('small');m.textContent='Soon';o.appendChild(m);box.appendChild(o);return}
       var a=document.createElement('a');a.className='go';a.href=L[1];a.textContent=L[0];if(L[2]){a.target='_blank';a.rel='noopener'}box.appendChild(a)});
     panel.hidden=false;
     if(!reduce.matches)panel.firstElementChild.animate([{opacity:0,transform:'translateY(10px) scale(.96)'},{opacity:1,transform:'none'}],{duration:240,easing:'cubic-bezier(.16,1,.3,1)'});
@@ -422,7 +424,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
     a.finished.then(function(){panel.hidden=true;if(last&&last.focus)last.focus()});
   }
 
-  // Blacksmith and Market: their modal is drawn by the game page (justa-web src/modal/modal.js) in a frame over the whole
+  // Tavern and Market: their modal is drawn by the game page (justa-web src/modal/modal.js) in a frame over the whole
   // village (Rafael, 16/10: "tudo do kingdom sejam modais tirando a parte da justa", "arruma todos modais"). The frame
   // has no background, so the live village shows around the panel; it says when it is ready and when it closes, and a
   // bout (the lists' part) sends the whole window to the game. One frame, kept while the modal is open; it goes 1.5 s
