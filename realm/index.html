@@ -149,6 +149,12 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
 @keyframes spin{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){.spin{animation-duration:2.4s}}
 .gos{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 12px;margin-top:20px}.gos:empty{display:none}.gos .go{margin-top:0}
+/* the joust's card: its modes one under the other, full width; one still to come stays grey and dead */
+.gos.modes{flex-direction:column;align-items:stretch;gap:14px}
+.gos.modes .go{justify-content:center;gap:10px;padding:12px 20px;font-size:19px}
+.go.off{cursor:default;color:#5d544b;background:linear-gradient(#d8d0c4,#b2a99c);box-shadow:0 0 0 2px #4a4038,0 5px 0 2px #4a4038,inset 0 3px 0 rgba(255,255,255,.4)}
+.go.off:hover{transform:none}
+.go.off small{padding:1px 8px;border-radius:999px;background:#4a4038;color:#efe7da;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
 @media (max-width:620px){
   :root{--hb:58px}
   .top .in{padding-inline:16px;gap:10px}
@@ -317,7 +323,10 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   // what each place opens; Joust, Races and Castle work today, the others open with the Ronin version
   var PLACES={
     stable:{tag:'Stable',name:'The Stable',text:'Feed, brush and kiss your horse. A well-kept horse hits harder.'},
-    lists:{tag:'Joust',name:'The Lists',go:'/realm/play/?door=bet'},   // straight into the betting panel (Rafael, 17/10: "deveria só abrir o jogo ao clicar, direto no gamba")
+    // the joust's card (Santa via Rafael, 17/10: "a volta do cartão antes de entrar na justa", three buttons: Fight the
+    // house, the GAMBA; PvE grey, to come; Ranked PvP: "ranked vai ser soon tambem"). A link's 4th slot 'soon' draws it
+    // grey and dead
+    lists:{tag:'Joust',name:'The Lists',text:'Choose your joust.',modes:1,links:[['Fight the house','/realm/play/?door=bet'],['PvE','',0,'soon'],['Ranked PvP','',0,'soon']]},
     tavern:{tag:'Tavern',name:'The Tavern',text:'Quests for the knights of the realm.'},
     smith:{tag:'Blacksmith',name:'The Blacksmith'},   // Armory and Forge, in the game page's modal
     market:{tag:'Market',name:'The Market'},          // Ronin Market, Armor market, Season pass and Buy $HORSKE, in the game page's modal
@@ -395,7 +404,10 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
     $('pName').textContent=P.name;$('pText').textContent=P.text||'';$('pText').hidden=!P.text;
     $('pWhy').hidden=!ALERTS[id];$('pWhy').textContent=ALERTS[id]||'';
     var links=P.links||[],box=$('pGos');box.textContent='';$('pSoon').hidden=links.length>0;
-    links.forEach(function(L){var a=document.createElement('a');a.className='go';a.href=L[1];a.textContent=L[0];if(L[2]){a.target='_blank';a.rel='noopener'}box.appendChild(a)});
+    box.classList.toggle('modes',!!P.modes);
+    links.forEach(function(L){
+      if(L[3]==='soon'){var o=document.createElement('span');o.className='go off';o.setAttribute('aria-disabled','true');o.textContent=L[0];var m=document.createElement('small');m.textContent='Soon';o.appendChild(m);box.appendChild(o);return}
+      var a=document.createElement('a');a.className='go';a.href=L[1];a.textContent=L[0];if(L[2]){a.target='_blank';a.rel='noopener'}box.appendChild(a)});
     panel.hidden=false;
     if(!reduce.matches)panel.firstElementChild.animate([{opacity:0,transform:'translateY(10px) scale(.96)'},{opacity:1,transform:'none'}],{duration:240,easing:'cubic-bezier(.16,1,.3,1)'});
     panel.animate([{opacity:0},{opacity:1}],{duration:reduce.matches?1:180,easing:'linear'});
