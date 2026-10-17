@@ -402,7 +402,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
     if(MODAL_PLACE[id])return openBox(id);
     last=document.activeElement;
     $('pName').textContent=P.name;$('pText').textContent=P.text||'';$('pText').hidden=!P.text;
-    $('pWhy').hidden=!ALERTS[id];$('pWhy').textContent=ALERTS[id]||'';
+    $('pWhy').hidden=!ALERTS[id]||!!P.modes;   // the joust's card says no "A GAMBA is open." (Rafael, 17/10: "tira esse a gamba is open"); its plaque keeps the alert$('pWhy').textContent=ALERTS[id]||'';
     var links=P.links||[],box=$('pGos');box.textContent='';$('pSoon').hidden=links.length>0;
     box.classList.toggle('modes',!!P.modes);
     links.forEach(function(L){
