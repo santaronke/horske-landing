@@ -1,4 +1,4 @@
-import{m as ct,c as mt}from"./index-CY_wTdpA.js";import{J as I}from"./joust-2BfEs9QO.js";import{l as ft,S as g,q as m,A as E,s as W,u as q}from"./econ-Deg9OsSu.js";const gt=`/* The village's modals (src/modal/modal.js). Paper: art/ui/paper.webp, a tileable parchment made with SVG filters\r
+import{m as ct,c as mt}from"./index-BmNdM-rV.js";import{J as I}from"./joust-2BfEs9QO.js";import{l as ft,S as g,q as m,A as E,s as W,u as q}from"./econ-Deg9OsSu.js";const gt=`/* The village's modals (src/modal/modal.js). Paper: art/ui/paper.webp, a tileable parchment made with SVG filters\r
    (fractal noise lit as a bump map for the fibres, fine grain, slow stains; scratchpad paper/gen.html), aged at the\r
    edges with inset shadows. */\r
 #wmodal{--ink:#2b1a0d;--paper:#efdcb3;--card:rgba(255,249,234,.62);--navy:#1d3778;--navy2:#132a62;--gold1:#ffd85a;--gold2:#e0a91f;--red:#b8322a;--green:#3a8a43;\r
