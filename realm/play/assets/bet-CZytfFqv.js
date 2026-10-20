@@ -1,4 +1,4 @@
-import{S as E,I as ot,A as W,v as l,x as st,g as it,J as rt}from"./index-D4gsf6EI.js";import{g as lt,E as B}from"./chain-DpIMjIq7.js";import"./config-CxlQWhDH.js";const dt=`/* The Lists' betting panel and result card (src/bet/bet.js) as a wooden board in the style of the site's header bar
+import{S as E,I as ot,A as W,v as l,x as st,g as it,J as rt}from"./index-DiNK3f6N.js";import{g as lt,E as B}from"./chain-DpIMjIq7.js";import"./config-CxlQWhDH.js";const dt=`/* The Lists' betting panel and result card (src/bet/bet.js) as a wooden board in the style of the site's header bar
    (horske-realm assets bar-l/bar-mid/bar-r: dark wood, a gold bevel at the edge): Rafael, 17/10, on the menu "queria
    que o menus fosse algo de madeira dentro da justa", showing the header, "talvez algo nesse estilo?". The wood is the
    header's own (art/ui/wood-dark.webp: its band between the gold edges, mirrored below so it repeats with no seam),
