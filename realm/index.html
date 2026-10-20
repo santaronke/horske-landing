@@ -65,12 +65,25 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
 .wallet:active{transform:translateY(3px)}
 .wallet:focus-visible{outline:3px solid #fff;outline-offset:4px}
 .wallet[aria-busy="true"]{cursor:progress;opacity:.85}
+/* what the gate says when the wallet is missing or says no, and the ways to a wallet */
+.gmsg{position:relative;z-index:5;max-width:min(92vw,440px);margin:12px auto 0;font-size:15px;line-height:1.4;color:#ffd7a8;text-align:center;text-shadow:0 1px 0 #0a1636}
+.gmsg[hidden],.gnow[hidden]{display:none}
+.gnow{position:relative;z-index:5;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px 18px;margin-top:12px}
+.gnow .wallet{text-decoration:none;padding:8px 18px}
+.glink{font-weight:700;font-size:15px;color:#d9e1ff;text-decoration:underline;text-underline-offset:3px}
 .inside .sky,.inside .ui{display:none}
 .inside .win{clip-path:none!important}
 @media (max-height:520px) and (orientation:landscape){
   .ui{flex-direction:row;column-gap:32px}
   .title{font-size:44px;-webkit-text-stroke:2px var(--ink)}
   .wallet{font-size:15px;padding:4px 12px 4px 4px}.wallet img{width:26px;height:26px}
+}
+@media (max-height:520px) and (orientation:landscape) and (max-width:799px){
+  .ui{display:grid;grid-template-columns:auto auto;grid-template-rows:auto auto;column-gap:clamp(16px,4vw,32px);row-gap:14px;align-content:center;justify-content:center}
+  .ui>.words:first-child{grid-column:2;grid-row:1;align-self:end}
+  .ui>.slot{grid-column:1;grid-row:1/3;align-self:center}
+  .ui>.words:last-child{grid-column:2;grid-row:2;align-self:start}
+  .gmsg{max-width:min(46vw,300px)}
 }
 @media (prefers-reduced-motion:reduce){.mist svg,.band,.spark,.spark::after{animation:none}}
 
@@ -98,6 +111,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
 .logout:hover{transform:translateY(-1px)}
 .logout:active{transform:translateY(2px)}
 .logout:focus-visible{outline:3px solid #fff;outline-offset:4px}
+.logout[hidden]{display:none}
 
 /* phones: the map scrolls (drag it). PC and tablet (.fit): the whole realm shows, nothing scrolls */
 .map{position:absolute;left:0;right:0;bottom:0;top:var(--hb);overflow:auto;scrollbar-width:none;overscroll-behavior:contain;cursor:grab;background:#2d5a1e}
@@ -223,6 +237,8 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
     </div>
     <div class="words">
       <button class="wallet" id="enter" type="button"><img src="/realm/assets/ronin.png" alt="" width="34" height="34"><span>Connect Ronin Wallet</span></button>
+      <p class="gmsg" id="gmsg" role="status" aria-live="polite" hidden></p>
+      <div class="gnow" id="gnow" hidden><a class="wallet" id="gopen" href="https://wallet.roninchain.com/">Open in Ronin Wallet</a><a class="glink" id="gget" href="https://wallet.roninchain.com/" target="_blank" rel="noopener">Get Ronin Wallet ↗</a></div>
     </div>
   </main>
   <div class="flash" id="flash"></div>
@@ -246,7 +262,6 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   var scene=$('scene'),sky=$('sky'),slot=$('slot'),rim=$('rim'),mist=$('mist'),win=$('win'),vila=$('vila'),flash=$('flash');
   var btn=$('enter'),title=$('title'),sub=$('sub'),again=$('again');
   var reduce=matchMedia('(prefers-reduced-motion: reduce)'),busy=false,g;
-  var DEMO=true;                    // until the game is on Ronin: Connect just walks in, no wallet
   // cubic-bezier as a function, to sample the approach into keyframes
   function bez(x1,y1,x2,y2){return function(x){var t=x;for(var i=0;i<8;i++){var f=3*x1*t*(1-t)*(1-t)+3*x2*t*t*(1-t)+t*t*t-x,d=3*x1*(1-t)*(1-t)+6*(x2-x1)*t*(1-t)+3*(1-x2)*t*t;if(Math.abs(f)<1e-5)break;t=Math.min(1,Math.max(0,t-f/(d||1e-6)))}return 3*y1*t*(1-t)*(1-t)+3*y2*t*t*(1-t)+t*t*t}}
   var IN=bez(.62,0,.9,.32),IO=bez(.65,0,.35,1);   // the portal is pulled in (slow, then fast); the village eases in and out
@@ -271,7 +286,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   function inside(){scene.classList.add('inside');busy=false;btn.removeAttribute('aria-busy');if(window.enterRealm)enterRealm()}
 
   function enter(){
-    if(busy)return;busy=true;place();
+    if(busy)return;place();busy=true;
     if(reduce.matches){             // no zoom: the gate simply fades into the village
       vila.style.transform='none';win.style.clipPath='none';
       win.animate([{opacity:0},{opacity:1}],{duration:280,easing:'cubic-bezier(.2,0,0,1)'}).finished.then(inside);
@@ -298,20 +313,41 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
     if(!busy||e.target===btn)return;
     document.getAnimations().forEach(function(a){if(a.effect&&a.effect.getTiming().iterations!==Infinity)a.finish()});
   });
+  var gmsg=$('gmsg'),gnow=$('gnow'),gopen=$('gopen');
+  var phone=matchMedia('(pointer:coarse)').matches||/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  function provider(){return (window.ronin&&window.ronin.provider)||window.ethereum||null}
+  function say(t){gmsg.textContent=t||'';gmsg.hidden=!t}
+  gopen.href='https://wallet.roninchain.com/in_app_browser?url='+encodeURIComponent(location.origin+location.pathname);
+  window.realmProvider=provider;
   btn.addEventListener('click',function(){
     if(busy)return;
-    var p=window.ronin&&window.ronin.provider;
-    if(DEMO||!p){enter();return}    // demo: the gate opens without asking for the wallet
-    btn.setAttribute('aria-busy','true');btn.querySelector('span').textContent='Connecting…';
-    p.request({method:'eth_requestAccounts'}).then(function(a){btn.removeAttribute('aria-busy');if(a&&a[0]){window.realmAcct=a[0];enter()}else reset()},reset);
+    var p=provider();
+    if(!p){                          // no wallet in this browser: on a phone the Ronin Wallet app opens this page; elsewhere, the extension
+      if(phone){say('Open this page in the Ronin Wallet app to enter the realm.');gnow.hidden=false}
+      else{gmsg.innerHTML='Install the <a class="glink" href="https://wallet.roninchain.com/" target="_blank" rel="noopener">Ronin Wallet \u2197</a>, then reload this page.';gmsg.hidden=false}
+      return;
+    }
+    say('');gnow.hidden=true;btn.setAttribute('aria-busy','true');btn.querySelector('span').textContent='Connecting…';
+    p.request({method:'eth_requestAccounts'}).then(function(a){
+      btn.removeAttribute('aria-busy');
+      if(a&&a[0]){window.realmAcct=a[0];enter()}
+      else{reset();say('The wallet gave no account: unlock it and try again.')}
+    },function(e){
+      reset();
+      say(e&&e.code===4001?'The wallet said no. Connect when you are ready.':e&&e.code===-32002?'Your wallet is already asking: open it to finish.':'The wallet did not answer. Try again.');
+    });
   });
+  // a wallet this site connected before: the button says the gate will open at once
+  (function(){var p=provider();if(p)p.request({method:'eth_accounts'}).then(function(a){if(a&&a[0]&&!busy)btn.querySelector('span').textContent='Enter the realm'},function(){})})();
   function reset(){
     document.getAnimations().forEach(function(a){if(a.effect&&a.effect.getTiming().iterations!==Infinity)a.cancel()});
     scene.classList.remove('inside');busy=false;btn.removeAttribute('aria-busy');btn.querySelector('span').textContent='Connect Ronin Wallet';
+    gmsg.hidden=true;gnow.hidden=true;
     place();
   }
   window.gateReset=reset;window.gatePlace=place;
   addEventListener('resize',place);
+  if(window.ResizeObserver){var ro=new ResizeObserver(function(){place()});document.querySelectorAll('.ui .words').forEach(function(e){ro.observe(e)})}
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(place);
   place();
 })();
@@ -490,19 +526,41 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   var rt=0;addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(build,120)});
 
   // from the gate into the realm, and back out with Log out
-  window.enterRealm=function(){
-    var a=window.realmAcct;addr.hidden=!a;
+  // the wallet in the header, and Log out, only while one is connected
+  function showAddr(a){
+    addr.hidden=!a;$('logout').hidden=!a;
     if(a){addr.querySelector('.l').textContent=a.slice(0,6)+'\u2026'+a.slice(-4);addr.querySelector('.s').textContent=a.slice(0,4)+'\u2026'+a.slice(-2);addr.title=a}
+  }
+  window.enterRealm=function(){
+    showAddr(window.realmAcct);
     realm.removeAttribute('aria-hidden');realm.style.visibility='visible';
     scene.animate([{opacity:1},{opacity:0}],{duration:reduce.matches?1:260,easing:'cubic-bezier(.4,0,1,1)',fill:'forwards'}).finished.then(function(){scene.style.display='none'});
   };
-  $('logout').addEventListener('click',function(){
-    window.realmAcct=null;close();closeBox(true);realm.setAttribute('aria-hidden','true');realm.style.visibility='';
-    scene.getAnimations().forEach(function(a){a.cancel()});scene.style.display='';
+  // Log out: the wallet forgotten here (and its permission dropped where the wallet allows it), back to the gate
+  function leave(){
+    window.realmAcct=null;showAddr(null);close();closeBox(true);realm.setAttribute('aria-hidden','true');realm.style.visibility='';
+    scene.getAnimations().forEach(function(a){a.cancel()});scene.style.display='';scene.style.visibility='';
     if(window.gateReset)gateReset();
+  }
+  $('logout').addEventListener('click',function(){
+    var p=window.realmProvider&&realmProvider();
+    if(p)try{p.request({method:'wallet_revokePermissions',params:[{eth_accounts:{}}]}).catch(function(){})}catch(e){}
+    leave();
   });
+  var wp=window.realmProvider&&realmProvider();
+  // another account in the wallet shows at once; none sends the player back to the gate
+  if(wp&&wp.on)wp.on('accountsChanged',function(a){if(a&&a[0]){if(window.realmAcct){window.realmAcct=a[0];showAddr(a[0])}}else if(window.realmAcct)leave()});
   build();
-  if(new URLSearchParams(location.search).has('back')){scene.style.display='none';realm.removeAttribute('aria-hidden');realm.style.visibility='visible'}
+  showAddr(null);
+  // back from the joust (?back=1): straight into the realm when the wallet is still connected, else the gate
+  if(new URLSearchParams(location.search).has('back')&&wp){
+    scene.style.visibility='hidden';
+    setTimeout(function(){if(!window.realmAcct)scene.style.visibility=''},3000);   // a wallet that never answers: the gate
+    wp.request({method:'eth_accounts'}).then(function(a){
+      if(a&&a[0]){window.realmAcct=a[0];scene.style.display='none';showAddr(a[0]);realm.removeAttribute('aria-hidden');realm.style.visibility='visible'}
+      else scene.style.visibility='';
+    },function(){scene.style.visibility=''});
+  }
 })();
 </script>
 </body>
