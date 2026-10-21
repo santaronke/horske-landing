@@ -112,6 +112,52 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
 .logout:active{transform:translateY(2px)}
 .logout:focus-visible{outline:3px solid #fff;outline-offset:4px}
 .logout[hidden]{display:none}
+/* the knight's card (Santa, 20/10: "show how much horske, ronke and ron you have", "the status, like top 69 ronke score";
+   Rafael: "não deveria ser um card em madeira com os detalhes do user?", "não dava pra ser na barra de madeira superior
+   também?", "tem telas que vai precisar do card em madeira separado. só bote na barra superior em telas mais largas"):
+   the wallet, its Ronke Score (the badge; its points in the tip), its HORSKE, RONKE and RON in dark wells, and Log out.
+   On an upright screen (or a narrow one), a board of the Joust Arena panel's wood (/realm/assets/wood-dark.webp, the gold bevel)
+   across the bottom, over the forest where no place stands; on a wider screen held sideways, its row in the wood bar */
+.pcard{--bevel:0 0 0 1px #452600,0 0 0 2px #926e3d,0 0 0 3px #d6b37f,0 0 0 4px #a1805a,0 0 0 6px #1d130b;--well:rgba(20,10,3,.5);--wellring:rgba(240,189,69,.28);
+  position:absolute;z-index:3;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));max-width:440px;margin-inline:auto;padding:9px;border-radius:6px;color:#fff3d6;
+  background:repeating-linear-gradient(180deg,transparent 0 46px,rgba(16,7,0,.6) 46px 48px,rgba(255,214,150,.09) 48px 49px,transparent 49px 50px),#42250f url(/realm/assets/wood-dark.webp) 0 0/700px auto repeat;
+  box-shadow:var(--bevel),0 10px 18px rgba(0,0,0,.45),inset 0 0 30px rgba(0,0,0,.45)}
+.pcard[hidden],.pcard .rank[hidden],.pscore[hidden]{display:none}
+.prow{display:flex;align-items:center;gap:8px}
+.prow .rank{margin-left:auto}
+.pcard .addr{height:30px}
+.pcard .logout{flex:none;height:30px;padding:0 8px}
+.pwells{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:8px}
+.pw{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0;padding:5px 3px;border-radius:8px;background:var(--well);box-shadow:inset 0 0 0 2px var(--wellring)}
+.pw small{font-family:var(--geo);font-weight:700;font-size:9px;letter-spacing:.08em;color:#f0bd45;text-shadow:0 1px 0 var(--ink)}
+.pw b{font-family:var(--geo);font-weight:700;font-size:18px;line-height:1;color:#fff3d6;white-space:nowrap;font-variant-numeric:tabular-nums;text-shadow:0 1px 0 var(--ink)}
+.pscore{margin:8px 0 0;font-size:12.5px;line-height:1.3;color:#e3cfa8;text-align:center}
+.rank{display:inline-flex;align-items:center;height:30px;padding:0 11px;border-radius:999px;background:#2a1a0b;box-shadow:0 0 0 2px #d9a947,0 0 0 3.5px var(--ink);font-family:var(--gothic);font-weight:700;font-size:16px;line-height:1;color:#f6e3b0;white-space:nowrap;cursor:default}
+.rank.gold{background:linear-gradient(#ffd85a,#e0a91f);color:#2b1a0d;box-shadow:0 0 0 2px #0a1636,0 0 0 3.5px #d9a947,inset 0 2px 0 rgba(255,255,255,.45)}
+@media (max-width:620px){.pscore{display:none}}
+/* a wider screen held sideways: the card's row in the wood bar, on the right */
+@media (orientation:landscape) and (min-width:640px){
+  .pcard{--well:rgba(20,10,3,.55);--wellring:rgba(240,189,69,.32);left:auto;right:calc(var(--hb)*.375);top:0;bottom:auto;max-width:none;margin:0;height:var(--hb);padding:0;display:flex;align-items:center;gap:8px;border-radius:0;background:none;box-shadow:none}
+  .prow{order:2}.prow .rank{margin-left:0}
+  .pwells{display:flex;gap:8px;margin:0}
+  .pw{flex-direction:row;align-items:baseline;gap:6px;height:34px;padding:8px 12px 0;box-shadow:inset 0 0 0 2px var(--wellring),0 1px 0 rgba(255,214,150,.12)}
+  .pw small{font-size:10px;letter-spacing:.12em}.pw b{font-size:17px}
+  .pscore{display:none}
+  .pcard .addr,.pcard .logout,.rank{height:34px}.rank{padding:0 13px;font-size:18px}
+}
+/* a narrower bar (a laptop, a tablet or a phone held sideways): the name gives way (the logo stays), the wallet shows short */
+@media (orientation:landscape) and (min-width:640px) and (max-width:1100px){
+  .brand b{display:none}
+  .pcard .addr .l{display:none}.pcard .addr .s{display:inline}
+}
+@media (orientation:landscape) and (min-width:640px) and (max-height:520px){
+  .brand b{display:none}
+  .pcard{right:12px;gap:6px}
+  .pwells{gap:6px}
+  .pw{height:30px;padding:7px 9px 0;gap:5px}.pw small{font-size:9px}.pw b{font-size:15px}
+  .pcard .addr,.pcard .logout,.rank{height:30px}.rank{padding:0 10px;font-size:16px}
+  .pcard .addr .l{display:none}.pcard .addr .s{display:inline}
+}
 
 /* phones: the map scrolls (drag it). PC and tablet (.fit): the whole realm shows, nothing scrolls */
 .map{position:absolute;left:0;right:0;bottom:0;top:var(--hb);overflow:auto;scrollbar-width:none;overscroll-behavior:contain;cursor:grab;background:#2d5a1e}
@@ -195,12 +241,21 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
     <span class="bars" aria-hidden="true"><i class="bar m"></i><i class="bar l"></i><i class="bar r"></i></span>
     <div class="in">
       <a class="brand" href="/" aria-label="HORSKingdom, back to the home page"><img src="/realm/assets/logo.webp" alt=""><b>HORSKingdom</b></a>
-      <div class="acct">
-        <span class="addr" id="addr" hidden><img src="/realm/assets/ronin.png" alt="" width="26" height="26"><span class="l"></span><span class="s"></span></span>
-        <button class="logout" id="logout" type="button" aria-label="Log out"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.5 2.5h-4v11h4M10 4.5 13.5 8 10 11.5M13.5 8H6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Log out</span></button>
-      </div>
     </div>
   </header>
+  <aside class="pcard" id="pcard" aria-label="Your knight" hidden>
+    <div class="prow">
+      <span class="addr" id="addr"><img src="/realm/assets/ronin.png" alt="" width="22" height="22"><span class="l"></span><span class="s"></span></span>
+      <span class="rank" id="pS" hidden></span>
+      <button class="logout" id="logout" type="button" aria-label="Log out" title="Log out"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.5 2.5h-4v11h4M10 4.5 13.5 8 10 11.5M13.5 8H6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+    <div class="pwells" role="group" aria-label="Your wallet on Ronin">
+      <div class="pw"><small>HORSKE</small><b id="pH">&hellip;</b></div>
+      <div class="pw"><small>RONKE</small><b id="pK">&hellip;</b></div>
+      <div class="pw"><small>RON</small><b id="pR">&hellip;</b></div>
+    </div>
+    <p class="pscore" id="pSc" hidden></p>
+  </aside>
   <div class="map" id="map"><div class="world" id="world"></div></div>
   <div class="panel" id="panel" hidden>
     <div class="parch" id="pCard" role="dialog" aria-modal="true" aria-labelledby="pName" tabindex="-1">
@@ -316,17 +371,18 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   var gmsg=$('gmsg'),gnow=$('gnow'),gopen=$('gopen');
   var phone=matchMedia('(pointer:coarse)').matches||/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   function provider(){return (window.ronin&&window.ronin.provider)||window.ethereum||null}
+  // the wallet's provider, waited for: an extension may put it on the page a moment after these scripts run (Santa,
+  // 20/10: "Back to kingdom brings you back to the portal page"), so a look that finds none looks again every 100 ms
+  // for up to `ms`
+  function waitProvider(ms){return new Promise(function(res){var p=provider();if(p||!ms)return res(p);var t0=Date.now(),iv=setInterval(function(){var q=provider();if(q||Date.now()-t0>=ms){clearInterval(iv);res(q||null)}},100)})}
   function say(t){gmsg.textContent=t||'';gmsg.hidden=!t}
   gopen.href='https://wallet.roninchain.com/in_app_browser?url='+encodeURIComponent(location.origin+location.pathname);
-  window.realmProvider=provider;
-  btn.addEventListener('click',function(){
-    if(busy)return;
-    var p=provider();
-    if(!p){                          // no wallet in this browser: on a phone the Ronin Wallet app opens this page; elsewhere, the extension
-      if(phone){say('Open this page in the Ronin Wallet app to enter the realm.');gnow.hidden=false}
-      else{gmsg.innerHTML='Install the <a class="glink" href="https://wallet.roninchain.com/" target="_blank" rel="noopener">Ronin Wallet \u2197</a>, then reload this page.';gmsg.hidden=false}
-      return;
-    }
+  window.realmProvider=provider;window.waitProvider=waitProvider;
+  function noWallet(){               // no wallet in this browser: on a phone the Ronin Wallet app opens this page; elsewhere, the extension
+    if(phone){say('Open this page in the Ronin Wallet app to enter the realm.');gnow.hidden=false}
+    else{gmsg.innerHTML='Install the <a class="glink" href="https://wallet.roninchain.com/" target="_blank" rel="noopener">Ronin Wallet \u2197</a>, then reload this page.';gmsg.hidden=false}
+  }
+  function connect(p){
     say('');gnow.hidden=true;btn.setAttribute('aria-busy','true');btn.querySelector('span').textContent='Connecting…';
     p.request({method:'eth_requestAccounts'}).then(function(a){
       btn.removeAttribute('aria-busy');
@@ -336,9 +392,17 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
       reset();
       say(e&&e.code===4001?'The wallet said no. Connect when you are ready.':e&&e.code===-32002?'Your wallet is already asking: open it to finish.':'The wallet did not answer. Try again.');
     });
+  }
+  var looking=false;
+  btn.addEventListener('click',function(){
+    if(busy||looking)return;
+    var p=provider();
+    if(p)return connect(p);
+    looking=true;                    // a click before the wallet arrived: wait a moment for it
+    waitProvider(1500).then(function(q){looking=false;if(q)connect(q);else noWallet()});
   });
   // a wallet this site connected before: the button says the gate will open at once
-  (function(){var p=provider();if(p)p.request({method:'eth_accounts'}).then(function(a){if(a&&a[0]&&!busy)btn.querySelector('span').textContent='Enter the realm'},function(){})})();
+  waitProvider(3000).then(function(p){if(p)p.request({method:'eth_accounts'}).then(function(a){if(a&&a[0]&&!busy)btn.querySelector('span').textContent='Enter the realm'},function(){})});
   function reset(){
     document.getAnimations().forEach(function(a){if(a.effect&&a.effect.getTiming().iterations!==Infinity)a.cancel()});
     scene.classList.remove('inside');busy=false;btn.removeAttribute('aria-busy');btn.querySelector('span').textContent='Connect Ronin Wallet';
@@ -526,19 +590,56 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   var rt=0;addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(build,120)});
 
   // from the gate into the realm, and back out with Log out
-  // the wallet in the header, and Log out, only while one is connected
+  // the wallet in the header, its purse and Log out, only while one is connected
   function showAddr(a){
     addr.hidden=!a;$('logout').hidden=!a;
     if(a){addr.querySelector('.l').textContent=a.slice(0,6)+'\u2026'+a.slice(-4);addr.querySelector('.s').textContent=a.slice(0,4)+'\u2026'+a.slice(-2);addr.title=a}
+    purse(a);
+  }
+  // this tab's pass through the gate (sessionStorage, the wallet that entered): back from the joust it walks straight in
+  var PASS='horskingdom-pass';
+  function pass(v){try{if(v===undefined)return sessionStorage.getItem(PASS);if(v)sessionStorage.setItem(PASS,v);else sessionStorage.removeItem(PASS)}catch(e){return null}}
+  // the wallet's purse on Ronin mainnet and its Ronke Score (Santa, 20/10: "how much horske, ronke and ron you have",
+  // "also could show the status, like top 69 ronke score"): Ronin's public RPC and the score's API answer this page
+  // directly; read when the wallet enters and again every minute while the realm shows
+  var RPC='https://api.roninchain.com/rpc',SCORE='https://ronke-score-nine.vercel.app/api/v1/score/';
+  var HORSKE='0xc0ca45c2e9448d3876ca86220b2418c719298396',RONKE='0xf988f63bf26c3ed3fbf39922149e3e7b1e5c27cb';
+  var short=new Intl.NumberFormat('en',{notation:'compact',maximumFractionDigits:1});
+  var pv={who:null,seq:0,timer:0};
+  function rpc(method,params){return fetch(RPC,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({jsonrpc:'2.0',id:1,method:method,params:params})}).then(function(r){return r.json()}).then(function(j){if(j.error)throw new Error(j.error.message);return j.result})}
+  function balanceOf(token,a){return rpc('eth_call',[{to:token,data:'0x70a08231'+a.slice(2).toLowerCase().padStart(64,'0')},'latest'])}
+  function whole(hex){var w=BigInt(hex||'0x0');return Number(w/1000000000000000n)/1000} // 18 decimals, to 3 places
+  function tierOf(rank){return !rank?null:rank<=69?'Top 69':rank<=100?'Top 100':rank<=200?'Top 200':rank<=500?'Top 500':null}
+  function purse(a){
+    var el=$('pcard');clearInterval(pv.timer);pv.who=a?a.toLowerCase():null;
+    if(!a){el.hidden=true;return}
+    el.hidden=false;
+    var me=++pv.seq,set=function(id,v){if(me===pv.seq)$(id).textContent=v};
+    var read=function(){
+      if(document.hidden)return;
+      Promise.all([balanceOf(HORSKE,a),balanceOf(RONKE,a),rpc('eth_getBalance',[a,'latest'])]).then(function(r){
+        set('pH',short.format(whole(r[0])));set('pK',short.format(whole(r[1])));set('pR',short.format(whole(r[2])));
+      },function(){if(me===pv.seq&&$('pH').textContent==='\u2026'){set('pH','\u2014');set('pK','\u2014');set('pR','\u2014')}});
+      fetch(SCORE+a).then(function(r){return r.status===404?null:r.json()}).then(function(j){
+        var d=j&&j.data,rank=d&&d.found!==false?d.rank:null,t=tierOf(rank),s=$('pS');
+        if(me!==pv.seq)return;
+        s.hidden=!rank;$('pSc').hidden=!rank;if(!rank)return;
+        s.textContent=t||('#'+rank.toLocaleString('en'));s.classList.toggle('gold',!!t);
+        s.title='Ronke Score: rank '+rank.toLocaleString('en')+(d.score!=null?', '+Number(d.score).toLocaleString('en')+' points':'');
+        $('pSc').textContent='Ronke Score: rank '+rank.toLocaleString('en')+(d.score!=null?' \u00b7 '+Number(d.score).toLocaleString('en')+' points':'');
+      },function(){});
+    };
+    ['pH','pK','pR'].forEach(function(id){$(id).textContent='\u2026'});$('pS').hidden=true;$('pSc').hidden=true;
+    read();pv.timer=setInterval(read,60000);
   }
   window.enterRealm=function(){
-    showAddr(window.realmAcct);
+    showAddr(window.realmAcct);pass(window.realmAcct);
     realm.removeAttribute('aria-hidden');realm.style.visibility='visible';
     scene.animate([{opacity:1},{opacity:0}],{duration:reduce.matches?1:260,easing:'cubic-bezier(.4,0,1,1)',fill:'forwards'}).finished.then(function(){scene.style.display='none'});
   };
   // Log out: the wallet forgotten here (and its permission dropped where the wallet allows it), back to the gate
   function leave(){
-    window.realmAcct=null;showAddr(null);close();closeBox(true);realm.setAttribute('aria-hidden','true');realm.style.visibility='';
+    window.realmAcct=null;pass(null);showAddr(null);close();closeBox(true);realm.setAttribute('aria-hidden','true');realm.style.visibility='';
     scene.getAnimations().forEach(function(a){a.cancel()});scene.style.display='';scene.style.visibility='';
     if(window.gateReset)gateReset();
   }
@@ -547,19 +648,25 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
     if(p)try{p.request({method:'wallet_revokePermissions',params:[{eth_accounts:{}}]}).catch(function(){})}catch(e){}
     leave();
   });
-  var wp=window.realmProvider&&realmProvider();
-  // another account in the wallet shows at once; none sends the player back to the gate
-  if(wp&&wp.on)wp.on('accountsChanged',function(a){if(a&&a[0]){if(window.realmAcct){window.realmAcct=a[0];showAddr(a[0])}}else if(window.realmAcct)leave()});
+  var waitP=window.waitProvider||function(){return Promise.resolve(window.realmProvider&&realmProvider())};
+  // another account in the wallet shows at once; none sends the player back to the gate (once the wallet is on the page)
+  waitP(3000).then(function(wp){if(wp&&wp.on)wp.on('accountsChanged',function(a){if(a&&a[0]){if(window.realmAcct){window.realmAcct=a[0];pass(a[0]);showAddr(a[0])}}else if(window.realmAcct)leave()})});
   build();
   showAddr(null);
-  // back from the joust (?back=1): straight into the realm when the wallet is still connected, else the gate
-  if(new URLSearchParams(location.search).has('back')&&wp){
-    scene.style.visibility='hidden';
-    setTimeout(function(){if(!window.realmAcct)scene.style.visibility=''},3000);   // a wallet that never answers: the gate
-    wp.request({method:'eth_accounts'}).then(function(a){
-      if(a&&a[0]){window.realmAcct=a[0];scene.style.display='none';showAddr(a[0]);realm.removeAttribute('aria-hidden');realm.style.visibility='visible'}
-      else scene.style.visibility='';
-    },function(){scene.style.visibility=''});
+  function walkIn(a){window.realmAcct=a;pass(a);scene.style.display='none';showAddr(a);realm.removeAttribute('aria-hidden');realm.style.visibility='visible'}
+  // back from the joust (?back=1): this tab passed the gate (its pass), so straight in with that wallet; with no pass (the
+  // joust was opened first) the wallet says, once it is on the page (waited for up to 3 s): connected, straight in; not, the gate
+  if(new URLSearchParams(location.search).has('back')){
+    var held=pass();
+    if(held)walkIn(held);
+    else{
+      scene.style.visibility='hidden';
+      setTimeout(function(){if(!window.realmAcct)scene.style.visibility=''},4500);   // a wallet that never answers: the gate
+      waitP(3000).then(function(wp){
+        if(!wp){scene.style.visibility='';return}
+        return wp.request({method:'eth_accounts'}).then(function(a){if(a&&a[0])walkIn(a[0]);else scene.style.visibility=''});
+      }).catch(function(){scene.style.visibility=''});
+    }
   }
 })();
 </script>
