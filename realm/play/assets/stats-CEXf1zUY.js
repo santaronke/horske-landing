@@ -1,4 +1,4 @@
-import{m as L}from"./morphdom-esm-DUuvMkUq.js";import{c as P,m as N,g as H}from"./chain-B9dRIyy0.js";import{c as I,m as i,r as E,o as _,w as $,s as b,a as C,p as z,b as M,t as F,d as B,h as T}from"./view-B_w9TCd3.js";const G=`/* The stats page (src/stats/stats.js; 20/10, Horske Racing's "All races & stats" for the joust): its layout (a column of
+import{m as L}from"./morphdom-esm-DUuvMkUq.js";import{c as P,m as N,g as H}from"./chain-3VSFPigM.js";import{c as I,m as i,r as E,o as _,w as $,s as b,a as C,p as z,b as M,t as F,d as B,h as T}from"./view-B_w9TCd3.js";const G=`/* The stats page (src/stats/stats.js; 20/10, Horske Racing's "All races & stats" for the joust): its layout (a column of
    boards: the totals, the chance, the records, the daily volume, every bout), in the arena's own wood and gold
    (src/bet/bet.css' tokens and art/ui/wood-dark.webp), not Horske Racing's colours. A column of cards on a phone. */
 :root{--wood:#42250f;--deep:#1d130b;--well:rgba(20,10,3,.5);--wellring:rgba(240,189,69,.28);--gold:#f0bd45;--gold1:#ffe08a;--gold2:#d9a21f;--ink:#1d130b;

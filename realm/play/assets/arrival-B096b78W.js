@@ -1,1 +1,0 @@
-import{snapshot as o}from"./bank-Clesp9nZ.js";import{e as r}from"./main-DJKpijn0.js";import"./morphdom-esm-DUuvMkUq.js";async function c(t,n){if(r(t))try{n.state.econ=await o(t,n.displayName||"Knight")}catch(e){n.state.econErr={msg:String(e&&e.message||e).slice(0,200),at:t.now()}}}function m(t,n){}export{c as onArrive,m as onLeave};

@@ -391,7 +391,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   gopen.href='https://wallet.roninchain.com/in_app_browser?url='+encodeURIComponent(location.origin+location.pathname);
   window.realmProvider=provider;window.waitProvider=waitProvider;
   function noWallet(){               // no wallet in this browser: on a phone the Ronin Wallet app opens this page; elsewhere, the extension
-    if(phone){say('Open this page in the Ronin Wallet app to enter the realm.');gnow.hidden=false}
+    if(phone){say('Open this page in the Ronin Wallet app to enter the kingdom.');gnow.hidden=false}
     else{gmsg.innerHTML='Install the <a class="glink" href="https://wallet.roninchain.com/" target="_blank" rel="noopener">Ronin Wallet \u2197</a>, then reload this page.';gmsg.hidden=false}
   }
   function connect(p){
@@ -414,7 +414,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
     waitProvider(1500).then(function(q){looking=false;if(q)connect(q);else noWallet()});
   });
   // a wallet this site connected before: the button says the gate will open at once
-  waitProvider(3000).then(function(p){if(p)p.request({method:'eth_accounts'}).then(function(a){if(a&&a[0]&&!busy)btn.querySelector('span').textContent='Enter the realm'},function(){})});
+  waitProvider(3000).then(function(p){if(p)p.request({method:'eth_accounts'}).then(function(a){if(a&&a[0]&&!busy)btn.querySelector('span').textContent='Enter the kingdom'},function(){})});
   function reset(){
     document.getAnimations().forEach(function(a){if(a.effect&&a.effect.getTiming().iterations!==Infinity)a.cancel()});
     scene.classList.remove('inside');busy=false;btn.removeAttribute('aria-busy');btn.querySelector('span').textContent='Connect Ronin Wallet';
@@ -451,7 +451,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
     smith:{tag:'Blacksmith',name:'The Blacksmith',text:'Your armor sets and the forge.',modes:1,links:[['Armory','',0,'soon'],['Forge','',0,'soon']]},
     market:{tag:'Market',name:'The Market'},          // Ronin Market and Buy $HORSKE, in the game page's modal (Armor market and Season pass: soon, 17/10)
     track:{tag:'Races',name:'HORSKingdom Racing',text:'Six Ronkes. One winner.',links:[['Play at Ronke Casino','https://games.ronkeverse.com/horske',1]]},
-    castle:{tag:'Castle',name:'The Castle',text:'Swap for HORSKE, the coin of the realm, on Ronin.',links:[['Swap $HORSKE','https://app.roninchain.com/swap?outputCurrency=0xc0Ca45c2e9448D3876Ca86220B2418C719298396',1]]},
+    castle:{tag:'Castle',name:'The Castle',text:'Swap for HORSKE, the coin of the kingdom, on Ronin.',links:[['Swap $HORSKE','https://app.roninchain.com/swap?outputCurrency=0xc0Ca45c2e9448D3876Ca86220B2418C719298396',1]]},
   };
   // demo alerts until the game sends real ones
   var ALERTS={stable:'Your horse is waiting for its kiss.',lists:'A GAMBA is open.'}; // the GAMBA moved to the Lists (16/10)
