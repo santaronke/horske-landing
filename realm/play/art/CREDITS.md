@@ -5,6 +5,9 @@ Everything here is either the creator's own work or CC0 (public domain). Licence
 ## Ground (`ground/`)
 - `turf.png`, `dirt.png`: cut and coloured from the landing's joust background, `horske-landing/fundo/gpt-computador.png` (the creator's own image, made with ChatGPT for horskeverse.vercel.app), by `tools/web_ground.py`. Rafael, 16/10/2026: "a grama e a terra vamos ter que usar o que voce criou pro site".
 
+## The Tavern (`tavern/`)
+- `tavern-wide.webp` (1536×1024, a computer and a phone held sideways) and `tavern-tall.webp` (1024×1536, a phone held upright): the waitress in the tavern, the creator's own images, made with ChatGPT on 21/10/2026 from Santa's picture (`Documents/ChatGPT/Claudio/output/taverna-garconete-menu-2026-10-21`, the prompts beside them), converted to WebP.
+
 ## Sounds (`sfx/`, `music/`)
 Picked by Rafael on 16/10/2026 from the listening page https://claude.ai/artifact/6ckA2fM1Hn8hAteV5X2xtu: "Lança: 1 · Elmo: — · Música: 17 / lança batendo sempre mesmo som, sem ter pro elmo".
 
