@@ -4,20 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>HORSKingdom</title>
-<link rel="icon" href="/realm/assets/favicon.png">
+<link rel="icon" href="/kingdom/assets/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@700;900&family=IM+Fell+English:ital@0;1&family=Gelasio:wght@700&display=swap" rel="stylesheet">
-<link rel="preload" as="image" href="/realm/assets/vila-larga.webp" media="(orientation:landscape)">
-<link rel="preload" as="image" href="/realm/assets/vila-em-pe.webp" media="(orientation:portrait)">
+<link rel="preload" as="image" href="/kingdom/assets/vila-larga.webp" media="(orientation:landscape)">
+<link rel="preload" as="image" href="/kingdom/assets/vila-em-pe.webp" media="(orientation:portrait)">
 <style>
 :root{
   --ink:#1d130b;--night:#0b1038;--gold:#f0bd45;--gold-3:#8a5a0e;--ice:#7fdcff;--violet:#a98bff;
   --gothic:"Grenze Gotisch","Times New Roman",serif;--fell:"IM Fell English",Georgia,serif;--geo:"Gelasio",Georgia,serif;
-  --vila:url(/realm/assets/vila-larga.webp);
+  --vila:url(/kingdom/assets/vila-larga.webp);
   --d:min(60vmin,440px);
 }
-@media (orientation:portrait){:root{--vila:url(/realm/assets/vila-em-pe.webp);--d:min(80vw,50vh,440px)}}
+@media (orientation:portrait){:root{--vila:url(/kingdom/assets/vila-em-pe.webp);--d:min(80vw,50vh,440px)}}
 @media (max-height:520px) and (orientation:landscape){:root{--d:min(56vh,440px)}}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;overflow:hidden;background:var(--night)}
@@ -93,9 +93,9 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
 .top{--bh:calc(var(--hb)*124/112);--cap:calc(var(--bh)*100/124);--fade:calc(var(--bh)*40/124);position:absolute;top:0;left:0;right:0;z-index:3;height:var(--hb);background:#3b200f}
 .bars{position:absolute;inset:0 0 auto;height:var(--bh);pointer-events:none;filter:drop-shadow(0 4px 4px rgba(0,0,0,.45))}
 .bar{position:absolute;top:0;height:100%;background:0 0/auto 100% no-repeat}
-.bar.m{left:calc(var(--cap) - var(--fade));right:calc(var(--cap) - var(--fade));background-image:url(/realm/assets/bar-mid.webp);background-repeat:repeat-x}
-.bar.l{left:0;width:var(--cap);background-image:url(/realm/assets/bar-l.webp)}
-.bar.r{right:0;width:var(--cap);background-image:url(/realm/assets/bar-r.webp);background-position:100% 0}
+.bar.m{left:calc(var(--cap) - var(--fade));right:calc(var(--cap) - var(--fade));background-image:url(/kingdom/assets/bar-mid.webp);background-repeat:repeat-x}
+.bar.l{left:0;width:var(--cap);background-image:url(/kingdom/assets/bar-l.webp)}
+.bar.r{right:0;width:var(--cap);background-image:url(/kingdom/assets/bar-r.webp);background-position:100% 0}
 .top .in{position:relative;z-index:2;display:flex;align-items:center;gap:14px;height:100%;padding-inline:calc(var(--cap)*.42)}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none}
 .brand img{width:44px;height:44px;border-radius:50%;border:3px solid var(--ink)}
@@ -116,11 +116,11 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
    Rafael: "não deveria ser um card em madeira com os detalhes do user?", "não dava pra ser na barra de madeira superior
    também?", "tem telas que vai precisar do card em madeira separado. só bote na barra superior em telas mais largas"):
    the wallet, its Ronke Score (the badge; its points in the tip), its HORSKE, RONKE and RON in dark wells, and Log out.
-   On an upright screen (or a narrow one), a board of the Joust Arena panel's wood (/realm/assets/wood-dark.webp, the gold bevel)
+   On an upright screen (or a narrow one), a board of the Joust Arena panel's wood (/kingdom/assets/wood-dark.webp, the gold bevel)
    across the bottom, over the forest where no place stands; on a wider screen held sideways, its row in the wood bar */
 .pcard{--bevel:0 0 0 1px #452600,0 0 0 2px #926e3d,0 0 0 3px #d6b37f,0 0 0 4px #a1805a,0 0 0 6px #1d130b;--well:rgba(20,10,3,.5);--wellring:rgba(240,189,69,.28);
   position:absolute;z-index:3;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));max-width:440px;margin-inline:auto;padding:9px;border-radius:6px;color:#fff3d6;
-  background:repeating-linear-gradient(180deg,transparent 0 46px,rgba(16,7,0,.6) 46px 48px,rgba(255,214,150,.09) 48px 49px,transparent 49px 50px),#42250f url(/realm/assets/wood-dark.webp) 0 0/700px auto repeat;
+  background:repeating-linear-gradient(180deg,transparent 0 46px,rgba(16,7,0,.6) 46px 48px,rgba(255,214,150,.09) 48px 49px,transparent 49px 50px),#42250f url(/kingdom/assets/wood-dark.webp) 0 0/700px auto repeat;
   box-shadow:var(--bevel),0 10px 18px rgba(0,0,0,.45),inset 0 0 30px rgba(0,0,0,.45)}
 .pcard[hidden],.pcard .rank[hidden],.pscore[hidden]{display:none}
 .prow{display:flex;align-items:center;gap:8px}
@@ -182,7 +182,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
 .spot .lit{opacity:0;filter:brightness(1.2) saturate(1.12);transition:opacity .2s cubic-bezier(.2,0,0,1);pointer-events:none}
 .spot .hit{fill:transparent;stroke:none}
 .spot:hover .lit,.spot.on .lit,.spot:focus-visible .lit{opacity:1}
-.tag{position:absolute;z-index:2;transform-origin:50% 100%;transform:translate(-50%,-100%) scale(var(--ts,1));display:inline-grid;place-items:center;height:36px;min-width:120px;padding:0 24px 2px;border:0;background:url(/realm/assets/placa.webp) center/100% 100% no-repeat;font-family:var(--gothic);font-weight:700;font-size:20px;line-height:1;color:#fff3d6;text-shadow:0 2px 0 #3a1d08,1px 0 0 #3a1d08,-1px 0 0 #3a1d08;white-space:nowrap;cursor:pointer;filter:drop-shadow(0 3px 2px rgba(0,0,0,.45));transition:transform .2s cubic-bezier(.3,1.5,.5,1)}
+.tag{position:absolute;z-index:2;transform-origin:50% 100%;transform:translate(-50%,-100%) scale(var(--ts,1));display:inline-grid;place-items:center;height:36px;min-width:120px;padding:0 24px 2px;border:0;background:url(/kingdom/assets/placa.webp) center/100% 100% no-repeat;font-family:var(--gothic);font-weight:700;font-size:20px;line-height:1;color:#fff3d6;text-shadow:0 2px 0 #3a1d08,1px 0 0 #3a1d08,-1px 0 0 #3a1d08;white-space:nowrap;cursor:pointer;filter:drop-shadow(0 3px 2px rgba(0,0,0,.45));transition:transform .2s cubic-bezier(.3,1.5,.5,1)}
 .tag:hover,.tag.on{transform:translate(-50%,calc(-100% - 5px)) scale(var(--ts,1))}
 .tag:focus-visible{outline:3px solid #fff;outline-offset:3px}
 .alert{position:absolute;right:-14px;top:-16px;width:30px;height:auto;animation:pop .5s cubic-bezier(.3,1.6,.5,1) .3s both;pointer-events:none}
@@ -191,7 +191,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
 /* the parchment that opens for each place */
 .panel{position:absolute;inset:0;z-index:4;display:grid;place-items:center;padding:16px;background:rgba(8,10,30,.55)}
 .panel[hidden]{display:none}
-.parch{position:relative;width:min(420px,100%);padding:30px 28px 26px;background:#efdcb3 url(/realm/assets/paper.webp) center/1024px;border:3px solid var(--ink);box-shadow:0 10px 0 var(--ink),inset 0 0 60px rgba(122,78,28,.32),inset 0 0 12px rgba(122,78,28,.36);text-align:center;color:var(--ink)}
+.parch{position:relative;width:min(420px,100%);padding:30px 28px 26px;background:#efdcb3 url(/kingdom/assets/paper.webp) center/1024px;border:3px solid var(--ink);box-shadow:0 10px 0 var(--ink),inset 0 0 60px rgba(122,78,28,.32),inset 0 0 12px rgba(122,78,28,.36);text-align:center;color:var(--ink)}
 .parch::before{content:"";position:absolute;inset:9px;border:2px solid #c98c1d;pointer-events:none}
 .parch h2{margin:0;font-family:var(--gothic);font-weight:900;font-size:40px;line-height:1;color:#1d3778}
 .parch p{margin:12px 0 0;font-size:19px;line-height:1.4}
@@ -217,7 +217,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
 .box.ready iframe{opacity:1}
 .bload{position:absolute;inset:0;display:grid;place-items:center;padding:16px}
 .bload[hidden]{display:none}
-.bcard{position:relative;display:flex;align-items:center;gap:14px;padding:18px 60px 18px 24px;background:#efdcb3 url(/realm/assets/paper.webp) center/1024px;border:3px solid var(--ink);box-shadow:0 8px 0 var(--ink),inset 0 0 36px rgba(122,78,28,.32);font-family:var(--gothic);font-weight:900;font-size:28px;line-height:1;color:#1d3778}
+.bcard{position:relative;display:flex;align-items:center;gap:14px;padding:18px 60px 18px 24px;background:#efdcb3 url(/kingdom/assets/paper.webp) center/1024px;border:3px solid var(--ink);box-shadow:0 8px 0 var(--ink),inset 0 0 36px rgba(122,78,28,.32);font-family:var(--gothic);font-weight:900;font-size:28px;line-height:1;color:#1d3778}
 .bcard .x{position:absolute;right:8px;top:50%;margin-top:-20px;width:40px;height:40px;border:0;background:none;font-family:var(--geo);font-size:30px;line-height:1;color:var(--ink);cursor:pointer}
 .bcard .x:focus-visible{background:rgba(43,26,13,.14)}
 .spin{flex:none;width:28px;height:28px;border-radius:50%;border:4px solid rgba(43,26,13,.22);border-top-color:var(--ink);animation:spin .8s linear infinite}
@@ -251,12 +251,12 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   <header class="top">
     <span class="bars" aria-hidden="true"><i class="bar m"></i><i class="bar l"></i><i class="bar r"></i></span>
     <div class="in">
-      <a class="brand" href="/" aria-label="HORSKingdom, back to the home page"><img src="/realm/assets/logo.webp" alt=""><b>HORSKingdom</b></a>
+      <a class="brand" href="/" aria-label="HORSKingdom, back to the home page"><img src="/kingdom/assets/logo.webp" alt=""><b>HORSKingdom</b></a>
     </div>
   </header>
   <aside class="pcard" id="pcard" aria-label="Your knight" hidden>
     <div class="prow">
-      <button class="addr" id="addr" type="button" aria-label="Copy your wallet's address"><img src="/realm/assets/ronin.png" alt="" width="22" height="22"><span class="l"></span><span class="s"></span></button>
+      <button class="addr" id="addr" type="button" aria-label="Copy your wallet's address"><img src="/kingdom/assets/ronin.png" alt="" width="22" height="22"><span class="l"></span><span class="s"></span></button>
       <a class="rank" id="pS" href="https://ronkeverse.com/score" target="_blank" rel="noopener" hidden></a>
       <button class="logout" id="logout" type="button" aria-label="Log out" title="Log out"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.5 2.5h-4v11h4M10 4.5 13.5 8 10 11.5M13.5 8H6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     </div>
@@ -303,7 +303,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
       </div>
     </div>
     <div class="words">
-      <button class="wallet" id="enter" type="button"><img src="/realm/assets/ronin.png" alt="" width="34" height="34"><span>Connect Ronin Wallet</span></button>
+      <button class="wallet" id="enter" type="button"><img src="/kingdom/assets/ronin.png" alt="" width="34" height="34"><span>Connect Ronin Wallet</span></button>
       <p class="gmsg" id="gmsg" role="status" aria-live="polite" hidden></p>
       <div class="gnow" id="gnow" hidden><a class="wallet" id="gopen" href="https://wallet.roninchain.com/">Open in Ronin Wallet</a><a class="glink" id="gget" href="https://wallet.roninchain.com/" target="_blank" rel="noopener">Get Ronin Wallet ↗</a></div>
     </div>
@@ -445,7 +445,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
     // the joust's card (Santa via Rafael, 17/10: "a volta do cartão antes de entrar na justa", three buttons: Fight the
     // house, the GAMBA; PvE grey, to come; Ranked PvP: "ranked vai ser soon tambem"). A link's 4th slot 'soon' draws it
     // grey and dead
-    lists:{tag:'Joust',name:'Joust Arena',text:'Choose your mode.',modes:1,links:[['Fight the house','/realm/play/?door=bet'],['PvE','',0,'soon'],['Ranked PvP','',0,'soon']]},
+    lists:{tag:'Joust',name:'Joust Arena',text:'Choose your mode.',modes:1,links:[['Fight the house','/kingdom/play/?door=bet'],['PvE','',0,'soon'],['Ranked PvP','',0,'soon']]},
     tavern:{tag:'Tavern',name:'The Tavern'},          // the quests, in the game page's modal
     // the Blacksmith waits (Rafael, 17/10: "blacksmith vai pra soon também"): Armory and Forge grey, like PvE and Ranked
     smith:{tag:'Blacksmith',name:'The Blacksmith',text:'Your armor sets and the forge.',modes:1,links:[['Armory','',0,'soon'],['Forge','',0,'soon']]},
@@ -458,7 +458,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
   var ALERTS={};
   // each drawing: the outline of every place (in the image's pixels) and where its plaque hangs
   var MAPS={
-    land:{src:'/realm/assets/vila-larga.webp',w:1717,h:916,min:.5,focus:[895,416],box:[330,40,1460,792],spots:{
+    land:{src:'/kingdom/assets/vila-larga.webp',w:1717,h:916,min:.5,focus:[895,416],box:[330,40,1460,792],spots:{
       lists:{p:'370,240 420,195 470,172 520,172 575,205 578,255 520,290 445,318 395,300 372,270',t:[470,170]},
       castle:{p:'1075,235 1100,200 1130,120 1175,80 1250,95 1265,150 1300,230 1290,285 1210,300 1130,295 1085,270',t:[1195,84]},
       tavern:{p:'735,405 760,375 800,340 840,335 880,360 905,400 905,435 860,445 790,445 745,430',t:[820,332]},
@@ -466,7 +466,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
       stable:{p:'345,595 380,560 420,525 470,515 500,540 580,570 580,600 540,625 480,650 400,655 350,620',t:[455,512]},
       market:{p:'715,610 735,575 790,540 845,545 895,568 930,600 925,640 870,645 800,640 725,635',t:[820,545]},
       track:{p:'1085,700 1120,650 1155,605 1250,595 1340,625 1365,670 1340,740 1230,775 1130,775 1090,740',t:[1235,592]}}},
-    port:{src:'/realm/assets/vila-em-pe.webp',w:1024,h:1536,min:.5,focus:[520,690],spots:{
+    port:{src:'/kingdom/assets/vila-em-pe.webp',w:1024,h:1536,min:.5,focus:[520,690],spots:{
       lists:{p:'70,520 120,470 230,410 290,385 330,400 420,440 430,520 400,560 300,610 200,660 140,630 75,600',t:[250,388]},
       castle:{p:'655,420 680,370 760,330 850,385 865,420 860,500 800,540 700,580 665,540 655,480',t:[760,336]},
       tavern:{p:'375,660 430,610 470,555 560,550 600,600 630,650 630,720 560,740 430,730 380,700',t:[510,550]},
@@ -504,7 +504,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
       var x0=Math.min.apply(0,xs),x1=Math.max.apply(0,xs),y0=Math.min.apply(0,ys),y1=Math.max.apply(0,ys);
       svg+='<mask id="m-'+id+'" maskUnits="userSpaceOnUse" x="0" y="0" width="'+M.w+'" height="'+M.h+'"><ellipse cx="'+(x0+x1)/2+'" cy="'+(y0+y1)/2+'" rx="'+((x1-x0)*.6).toFixed(0)+'" ry="'+((y1-y0)*.62).toFixed(0)+'" fill="url(#soft)"/></mask>';
       spots+='<g class="spot" data-id="'+id+'" tabindex="0" role="button" aria-label="'+P.name+'"><image class="lit" href="'+M.src+'" width="'+M.w+'" height="'+M.h+'" mask="url(#m-'+id+')"/><polygon class="hit" points="'+S.p+'"/></g>';
-      tags+='<button class="tag" type="button" data-id="'+id+'" tabindex="-1" style="left:'+(S.t[0]/M.w*100).toFixed(2)+'%;top:'+(S.t[1]/M.h*100).toFixed(2)+'%">'+P.tag+(ALERTS[id]?'<img class="alert" src="/realm/assets/alerta.webp" alt="">':'')+'</button>';
+      tags+='<button class="tag" type="button" data-id="'+id+'" tabindex="-1" style="left:'+(S.t[0]/M.w*100).toFixed(2)+'%;top:'+(S.t[1]/M.h*100).toFixed(2)+'%">'+P.tag+(ALERTS[id]?'<img class="alert" src="/kingdom/assets/alerta.webp" alt="">':'')+'</button>';
     }
     svg+='</defs><image href="'+M.src+'" width="'+M.w+'" height="'+M.h+'"/>'+spots+'</svg>';
     map.classList.toggle('fit',f.fit);
@@ -557,7 +557,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
     box.animate([{opacity:0},{opacity:1}],{duration:reduce.matches?1:180,easing:'linear'});
     if(bFrame&&ready){door();shown();return}
     box.classList.remove('ready');bLoad.hidden=false;
-    if(!bFrame){bFrame=document.createElement('iframe');bFrame.title=P.name;box.insertBefore(bFrame,bLoad);ready=false;bFrame.src='/realm/play/?modal=1&building='+id+'&door='+MODAL_PLACE[id]}
+    if(!bFrame){bFrame=document.createElement('iframe');bFrame.title=P.name;box.insertBefore(bFrame,bLoad);ready=false;bFrame.src='/kingdom/play/?modal=1&building='+id+'&door='+MODAL_PLACE[id]}
     if(!reduce.matches)bLoad.firstElementChild.animate([{opacity:0,transform:'scale(.96)'},{opacity:1,transform:'none'}],{duration:220,easing:'cubic-bezier(.16,1,.3,1)'});
     $('bCard').focus({preventScroll:true});
   }

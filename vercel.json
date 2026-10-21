@@ -1,5 +1,17 @@
 {
   "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/realm",
+      "destination": "/kingdom/",
+      "permanent": false
+    },
+    {
+      "source": "/realm/:path*",
+      "destination": "/kingdom/:path*",
+      "permanent": false
+    }
+  ],
   "headers": [
     {
       "source": "/assets/(.*)",
@@ -11,7 +23,7 @@
       ]
     },
     {
-      "source": "/realm/play/(assets|cdn|art)/(.*)",
+      "source": "/kingdom/play/(assets|cdn|art)/(.*)",
       "headers": [
         {
           "key": "Cache-Control",

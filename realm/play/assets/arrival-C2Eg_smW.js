@@ -1,1 +1,0 @@
-import{snapshot as o}from"./bank-CE7U_T7A.js";import{e as r}from"./main-BOhw8j25.js";import"./config-5sKWrvMd.js";async function c(t,n){if(r(t))try{n.state.econ=await o(t,n.displayName||"Knight")}catch(e){n.state.econErr={msg:String(e&&e.message||e).slice(0,200),at:t.now()}}}function m(t,n){}export{c as onArrive,m as onLeave};
