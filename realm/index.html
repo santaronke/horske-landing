@@ -414,7 +414,7 @@ body{font-family:var(--fell);color:#fff;-webkit-font-smoothing:antialiased}
     waitProvider(1500).then(function(q){looking=false;if(q)connect(q);else noWallet()});
   });
   // a wallet this site connected before: the button says the gate will open at once
-  waitProvider(3000).then(function(p){if(p)p.request({method:'eth_accounts'}).then(function(a){if(a&&a[0]&&!busy)btn.querySelector('span').textContent='Enter the kingdom'},function(){})});
+  waitProvider(3000).then(function(p){if(p)p.request({method:'eth_accounts'}).then(function(a){if(a&&a[0]&&!busy)btn.querySelector('span').textContent='Enter the Kingdom'},function(){})});
   function reset(){
     document.getAnimations().forEach(function(a){if(a.effect&&a.effect.getTiming().iterations!==Infinity)a.cancel()});
     scene.classList.remove('inside');busy=false;btn.removeAttribute('aria-busy');btn.querySelector('span').textContent='Connect Ronin Wallet';
