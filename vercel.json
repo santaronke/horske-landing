@@ -7,8 +7,8 @@
       "permanent": false
     },
     {
-      "source": "/realm/:path*",
-      "destination": "/kingdom/:path*",
+      "source": "/realm/(.*)",
+      "destination": "/kingdom/$1",
       "permanent": false
     }
   ],
