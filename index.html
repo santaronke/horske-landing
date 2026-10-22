@@ -64,18 +64,10 @@ a{color:inherit}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none}
 .brand img{width:44px;height:44px;border-radius:50%;border:var(--line)}
 .brand b{font-family:var(--gothic);font-weight:900;font-size:30px;color:var(--gold);letter-spacing:.5px;-webkit-text-stroke:1.5px var(--ink);paint-order:stroke fill;text-shadow:0 3px 0 var(--ink)}
-.pennants{display:flex;gap:8px;align-self:flex-start}
-.pennant{position:relative;display:flex;flex-direction:column;align-items:center;width:104px;padding:10px 6px 22px;text-decoration:none;font-family:var(--gothic);font-weight:700;font-size:19px;line-height:1;color:#fff;background:var(--ink);clip-path:polygon(0 0,100% 0,100% 74%,50% 100%,0 74%);transition:transform .2s}
-.pennant::before{content:"";position:absolute;inset:0 3px 3px;background:linear-gradient(#fff0b8,#ecc25e 30%,#c08a2c 65%,#7a4d0e);clip-path:polygon(0 0,100% 0,100% 74%,50% 100%,0 74%);z-index:-3}
-.pennant::after{content:"";position:absolute;inset:0 8px 8px;background:var(--ink);clip-path:polygon(0 0,100% 0,100% 74%,50% 100%,0 74%);z-index:-2}
-.pennant .pf{position:absolute;inset:0 9.5px 10px;background:var(--c,var(--red));clip-path:polygon(0 0,100% 0,100% 74%,50% 100%,0 74%);z-index:-1}
-.pennant{isolation:isolate}
-.pennant small{font-family:var(--fellsc);font-size:12px;letter-spacing:1px;margin-top:4px;opacity:.9}
-a.pennant:hover{transform:translateY(4px)}
-span.pennant{cursor:default}
-.pennant.blue{--c:var(--royal-2)}
-.pennant.gold{--c:var(--gold);color:var(--ink)}
-/* pennants pinned to the right edge; on the left, the signed-in wallet: short address and a log out button */
+/* the brand in the middle of the bar (Rafael, 22/10: "tira essas bandeirolas e bota o icone do horske + horsekingdom
+   centralizado na top bar"); the signed-in wallet on the right: short address and a log out button */
+.top .brand{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);white-space:nowrap}
+.top .wrap{justify-content:flex-end}
 .top .wrap{width:auto;margin:0;padding-inline:calc(var(--cap)*.42)}
 .who{display:flex;align-items:center;gap:14px;min-width:0}
 .acct{display:flex;align-items:center;gap:10px}
@@ -187,21 +179,17 @@ footer p{margin:6px 0 0;font-style:italic}
   section{padding:64px 0}
   .top{--hb:58px}
   .top .wrap{height:58px}
-  .brand b{display:none}
+  .brand{gap:8px}
+  .brand img{width:38px;height:38px}
+  .brand b{font-size:24px}
   .top .wrap{padding-inline:16px}
-  .top.signed .brand{display:none}
+  .top.signed .brand b{display:none}
   .addr{height:30px;padding:0 7px;font-size:12px}
   .addr img,.addr::after,.addr .l{display:none}
   .addr .s{display:inline}
   .logout{height:30px;padding:0 7px}
   .logout span{display:none}
   .acct{gap:7px}
-  .pennants{gap:6px}
-  .pennant{width:80px;font-size:16px;padding:8px 4px 18px}
-  .pennant::before{inset:0 2px 2px}
-  .pennant::after{inset:0 6px 6px}
-  .pennant .pf{inset:0 7px 7.5px}
-  .pennant small{font-size:11px}
   .btn{font-size:21px;padding:12px 20px}
   .fact{grid-template-columns:1fr;gap:2px}
   .parch{padding:40px 20px 30px}
@@ -306,11 +294,6 @@ a.wallet{text-decoration:none}
         <button class="logout" id="logout" type="button" aria-label="Log out"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.5 2.5h-4v11h4M10 4.5 13.5 8 10 11.5M13.5 8H6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Log out</span></button>
       </div>
     </div>
-    <nav class="pennants" aria-label="Main">
-      <span class="pennant blue" aria-disabled="true"><i class="pf"></i>Joust<small>soon</small></span>
-      <span class="pennant" aria-disabled="true"><i class="pf"></i>Races<small>soon</small></span>
-      <a class="pennant gold" href="#token"><i class="pf"></i>$HORSKE<small>buy</small></a>
-    </nav>
   </div>
 </header>
 
